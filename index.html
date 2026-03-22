@@ -106,16 +106,28 @@
             background: none;
             border: none;
             font-size: 28px;
-            color: #ccc;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
             cursor: pointer;
-            transition: color 0.2s;
+            transition: transform 0.2s;
+            z-index: 10;
         }
 
         .close-btn:hover {
-            color: var(--accent-color);
+            transform: scale(1.1);
         }
 
-        /* Accordion (Details/Summary) Styling for UX */
+        /* Image Styling */
+        .modal-hero-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Accordion (Details/Summary) Styling */
         details {
             margin-bottom: 15px;
             background: var(--primary-bg);
@@ -169,19 +181,33 @@
             border-bottom: 2px dashed #f1f1f1;
             padding-bottom: 10px;
             margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        /* Cute Tags Styling */
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             margin-bottom: 20px;
         }
 
         .tag {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             background: #ffe0e1;
             color: #d85a60;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+
+        .tag.blue { background: #e0f2fe; color: #0284c7; }
+        .tag.green { background: #dcfce7; color: #166534; }
+        .tag.purple { background: #f3e8ff; color: #7e22ce; }
+        .tag.orange { background: #ffedd5; color: #c2410c; }
 
         .modal-content ul {
             padding-left: 20px;
@@ -197,6 +223,12 @@
             border: 3px solid white;
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+
+        .custom-pin:hover {
+            transform: scale(1.2);
+            background-color: var(--accent-hover);
         }
     </style>
 </head>
@@ -241,12 +273,18 @@
 
         const itineraryData = {
             'rome': `
+                <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80" alt="Colosseum in Rome" class="modal-hero-img">
                 <h2>Days 1–3: Rome 🏛️</h2>
                 
+                <div class="tag-container">
+                    <span class="tag">🏛️ Ancient Wonders</span>
+                    <span class="tag orange">🍝 Pasta Paradise</span>
+                    <span class="tag purple">🎨 Baroque Masterpieces</span>
+                </div>
+
                 <details open>
                     <summary>🛏️ Stay & Logistics</summary>
                     <div class="details-content">
-                        <span class="tag">Budget: ~$110/night</span>
                         <p><strong>Where:</strong> Casa di Santa Brigida or Casa Maria Immacolata (Campo de' Fiori area). Book 3–4 months in advance via <em>MonasteryStays.com</em>.</p>
                         <p><strong>Why here?</strong> These are traditional convent/monastery stays offering private, air-conditioned rooms right in the historic center. They are quiet, incredibly safe, and highly affordable compared to standard hotels.</p>
                         <p><strong>Arrival Transit:</strong> Take the Leonardo Express train from Fiumicino Airport directly to Roma Termini (€14, buy at the station kiosk).</p>
@@ -284,12 +322,18 @@
                 </details>
             `,
             'assisi': `
+                <img src="https://images.unsplash.com/photo-1604580864964-0462f5d5b1a8?auto=format&fit=crop&w=800&q=80" alt="Umbrian Countryside" class="modal-hero-img">
                 <h2>Day 4: Assisi 🕊️</h2>
                 
+                <div class="tag-container">
+                    <span class="tag green">🌲 Nature Trails</span>
+                    <span class="tag blue">🕊️ Spiritual Retreat</span>
+                    <span class="tag orange">🐗 Wild Boar Ragù</span>
+                </div>
+
                 <details open>
                     <summary>🛏️ Stay & Logistics</summary>
                     <div class="details-content">
-                        <span class="tag">Budget: ~$90–$110/night</span>
                         <p><strong>Where:</strong> Monastero Sant'Andrea or Suore Francescane.</p>
                         <p><strong>Why here?</strong> Assisi is a deeply spiritual medieval hill town. Staying in a convent here immerses you completely in the quiet, historical atmosphere of the region.</p>
                         <p><strong>Transit:</strong> Take a morning regional train from Roma Termini to Assisi (approx. 2 hours). Buy tickets at the station or via Trenitalia. Take the local bus or a taxi up the hill to the historic center.</p>
@@ -308,12 +352,18 @@
                 </details>
             `,
             'florence': `
+                <img src="https://images.unsplash.com/photo-1543429776-27826322084b?auto=format&fit=crop&w=800&q=80" alt="Florence Duomo" class="modal-hero-img">
                 <h2>Days 5–7: Florence & Tuscany 🍷</h2>
+                
+                <div class="tag-container">
+                    <span class="tag purple">🎨 Renaissance Art</span>
+                    <span class="tag">🍷 Wine Country</span>
+                    <span class="tag green">🛵 Vespa Cruising</span>
+                </div>
                 
                 <details open>
                     <summary>🛏️ Stay & Logistics</summary>
                     <div class="details-content">
-                        <span class="tag">Budget: ~$120/night</span>
                         <p><strong>Where:</strong> An Agriturismo like <em>Fattoria Il Milione</em> (just outside the city) or <em>Oblate Guest House</em> (central).</p>
                         <p><strong>Why here?</strong> An Agriturismo is a working Italian farm/vineyard. It gives you a unique, rustic Tuscan farmhouse experience surrounded by olive groves while still being close to Renaissance art.</p>
                         <p><strong>Transit:</strong> Regional train from Assisi to Firenze Santa Maria Novella (approx. 2.5 hours).</p>
@@ -350,12 +400,18 @@
                 </details>
             `,
             'cinque': `
+                <img src="https://images.unsplash.com/photo-1499678329028-1014352c961f?auto=format&fit=crop&w=800&q=80" alt="Cinque Terre Coast" class="modal-hero-img">
                 <h2>Days 8–10: Cinque Terre 🍋</h2>
+                
+                <div class="tag-container">
+                    <span class="tag blue">🌊 Coastal Vibes</span>
+                    <span class="tag green">🥾 Epic Hiking</span>
+                    <span class="tag orange">👩‍🍳 Pasta Making</span>
+                </div>
                 
                 <details open>
                     <summary>🛏️ Stay & Logistics</summary>
                     <div class="details-content">
-                        <span class="tag">Budget: ~$130/night</span>
                         <p><strong>Where:</strong> An Affittacamere (guesthouse) like <em>Affittacamere Anna</em> in Levanto or <em>Ospitalità Il Borgo</em> in the villages.</p>
                         <p><strong>Why here?</strong> Affittacamere are run by locals, offering a much more authentic, home-grown feel than the few commercial hotels in the area.</p>
                         <p><strong>Transit:</strong> Train from Florence to La Spezia Centrale. Buy the <strong>"Cinque Terre Treno MS Card"</strong> at the station for unlimited local trains and trail access.</p>
@@ -382,22 +438,28 @@
                 </details>
 
                 <details>
-                    <summary>Day 10: Culinary Immersion)</summary>
+                    <summary>Day 10: Culinary Immersion (No Pine Nuts!)</summary>
                     <div class="details-content">
                         <ul>
-                            <li><strong>Morning:</strong> Fresh Pasta and Focaccia class. Ligurian food was shaped by sailors needing long-lasting breads. You'll master hand-rolled pasta shapes like <em>trofie</em> paired with fresh seafood and tomato sauces! <em>Pre-book 4 weeks ahead (Cinque Terre Cooking School).</em></li>
+                            <li><strong>Morning:</strong> Fresh Pasta and Focaccia class. Ligurian food was shaped by sailors needing long-lasting breads. You'll master hand-rolled pasta shapes like <em>trofie</em> paired with fresh seafood and tomato sauces, entirely avoiding pine nuts! <em>Pre-book 4 weeks ahead (Cinque Terre Cooking School).</em></li>
                             <li><strong>Afternoon:</strong> Rent a kayak in Riomaggiore or Monterosso to view the villages from the water, just as returning sailors would have for centuries.</li>
                         </ul>
                     </div>
                 </details>
             `,
             'venice': `
+                <img src="https://images.unsplash.com/photo-1514890547357-a9ee288728e0?auto=format&fit=crop&w=800&q=80" alt="Venice Grand Canal" class="modal-hero-img">
                 <h2>Days 11–14: Venice 🛶</h2>
+                
+                <div class="tag-container">
+                    <span class="tag blue">🛶 Romantic Waterways</span>
+                    <span class="tag purple">🎭 Secret History</span>
+                    <span class="tag">🥂 Cicchetti Crawl</span>
+                </div>
                 
                 <details open>
                     <summary>🛏️ Stay & Logistics</summary>
                     <div class="details-content">
-                        <span class="tag">Budget: ~$120/night</span>
                         <p><strong>Where:</strong> <em>Foresteria Valdese</em> or <em>Istituto San Giuseppe</em>. Book directly 3 months ahead.</p>
                         <p><strong>Why here?</strong> These are historic religious guest houses located in genuine, quiet Venetian neighborhoods (Castello or Cannaregio), far away from the tourist traps of St. Mark's.</p>
                         <p><strong>Transit:</strong> High-speed train from Cinque Terre to Venice Santa Lucia (approx. 4.5 hours). Pre-book 2 months ahead on Trenitalia.</p>
