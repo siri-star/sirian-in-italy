@@ -1,544 +1,534 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Italian Adventure</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Italian Adventure</title>
 
-    <style>
-        :root {
-            --primary-bg: #fdfaf6;
-            --accent-color: #ff9a9e;
-            --accent-hover: #ff8489;
-            --text-main: #4a4a4a;
-            --text-light: #7a7a7a;
-            --card-bg: #ffffff;
-            --border-light: #f1f1f1;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Nunito', sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
+<style>
+:root {
+--primary-bg: #fdfaf6;
+--accent-color: #ff9a9e;
+--accent-hover: #ff8489;
+--text-main: #4a4a4a;
+--text-light: #7a7a7a;
+--card-bg: #ffffff;
+--border-light: #f1f1f1;
+}
 
-        header {
-            background-color: var(--card-bg);
-            text-align: center;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            z-index: 1000;
-        }
+body {
+margin: 0;
+padding: 0;
+font-family: 'Nunito', sans-serif;
+background-color: var(--primary-bg);
+color: var(--text-main);
+display: flex;
+flex-direction: column;
+height: 100vh;
+}
 
-        h1 {
-            font-family: 'Fredoka', sans-serif;
-            color: var(--accent-color);
-            margin: 0;
-            font-size: 2.2rem;
-            letter-spacing: 1px;
-        }
+header {
+background-color: var(--card-bg);
+text-align: center;
+padding: 20px;
+box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+z-index: 1000;
+}
 
-        p.subtitle {
-            margin: 5px 0 0 0;
-            color: var(--text-light);
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
+h1 {
+font-family: 'Fredoka', sans-serif;
+color: var(--accent-color);
+margin: 0;
+font-size: 2.2rem;
+letter-spacing: 1px;
+}
 
-        #map {
-            flex-grow: 1;
-            width: 100%;
-            z-index: 1;
-        }
+p.subtitle {
+margin: 5px 0 0 0;
+color: var(--text-light);
+font-size: 1.1rem;
+font-weight: 600;
+}
 
-        /* Modal Styling */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+#map {
+flex-grow: 1;
+width: 100%;
+z-index: 1;
+}
 
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
+/* Modal Styling */
+.modal-overlay {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.4);
+backdrop-filter: blur(4px);
+z-index: 2000;
+justify-content: center;
+align-items: center;
+opacity: 0;
+transition: opacity 0.3s ease;
+}
 
-        .modal-content {
-            background: var(--card-bg);
-            width: 90%;
-            max-width: 650px;
-            max-height: 85vh;
-            border-radius: 20px;
-            padding: 30px;
-            position: relative;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            overflow-y: auto;
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
+.modal-overlay.active {
+display: flex;
+opacity: 1;
+}
 
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
+.modal-content {
+background: var(--card-bg);
+width: 90%;
+max-width: 650px;
+max-height: 85vh;
+border-radius: 20px;
+padding: 30px;
+position: relative;
+box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+overflow-y: auto;
+transform: translateY(20px);
+transition: transform 0.3s ease;
+}
 
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            background: none;
-            border: none;
-            font-size: 28px;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
-            cursor: pointer;
-            transition: transform 0.2s;
-            z-index: 10;
-        }
+.modal-overlay.active .modal-content {
+transform: translateY(0);
+}
 
-        .close-btn:hover {
-            transform: scale(1.1);
-        }
+.close-btn {
+position: absolute;
+top: 20px;
+right: 25px;
+background: none;
+border: none;
+font-size: 28px;
+color: #ccc;
+cursor: pointer;
+transition: color 0.2s;
+}
 
-        /* Image Styling */
-        .modal-hero-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+.close-btn:hover {
+color: var(--accent-color);
+}
 
-        /* Accordion Styling */
-        details {
-            margin-bottom: 15px;
-            background: var(--primary-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-light);
-        }
+/* Accordion (Details/Summary) Styling for UX */
+details {
+margin-bottom: 15px;
+background: var(--primary-bg);
+border-radius: 12px;
+overflow: hidden;
+border: 1px solid var(--border-light);
+}
 
-        summary {
-            padding: 15px 20px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #5c7c8a;
-            cursor: pointer;
-            list-style: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.2s;
-        }
+summary {
+padding: 15px 20px;
+font-weight: 600;
+font-size: 1.1rem;
+color: #5c7c8a;
+cursor: pointer;
+list-style: none;
+display: flex;
+justify-content: space-between;
+align-items: center;
+transition: background 0.2s;
+}
 
-        summary::-webkit-details-marker {
-            display: none;
-        }
+summary::-webkit-details-marker {
+display: none;
+}
 
-        summary:after {
-            content: "+";
-            font-size: 1.5rem;
-            color: var(--accent-color);
-            transition: transform 0.3s;
-        }
+summary:after {
+content: "+";
+font-size: 1.5rem;
+color: var(--accent-color);
+transition: transform 0.3s;
+}
 
-        details[open] summary:after {
-            transform: rotate(45deg);
-        }
+details[open] summary:after {
+transform: rotate(45deg);
+}
 
-        details[open] summary {
-            background: #f4efea;
-            border-bottom: 1px solid var(--border-light);
-        }
+details[open] summary {
+background: #f4efea;
+border-bottom: 1px solid var(--border-light);
+}
 
-        .details-content {
-            padding: 15px 20px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
+.details-content {
+padding: 15px 20px;
+font-size: 0.95rem;
+line-height: 1.6;
+}
 
-        .modal-content h2 {
-            font-family: 'Fredoka', sans-serif;
-            color: var(--accent-color);
-            border-bottom: 2px dashed #f1f1f1;
-            padding-bottom: 10px;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
+.modal-content h2 {
+font-family: 'Fredoka', sans-serif;
+color: var(--accent-color);
+border-bottom: 2px dashed #f1f1f1;
+padding-bottom: 10px;
+margin-top: 0;
+margin-bottom: 15px;
+}
 
-        /* Strict Tag Theming System */
-        .tag-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
+/* Strict Tag System */
+.tag-container {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-bottom: 20px;
+}
 
-        .tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
+.tag {
+display: inline-flex;
+align-items: center;
+padding: 5px 12px;
+border-radius: 20px;
+font-size: 0.85rem;
+font-weight: 700;
+box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
 
-        .tag.history { background: #f3e8ff; color: #7e22ce; } /* Purple */
-        .tag.food { background: #ffedd5; color: #c2410c; } /* Orange */
-        .tag.nature { background: #dcfce7; color: #166534; } /* Green */
-        .tag.water { background: #e0f2fe; color: #0284c7; } /* Blue */
+.tag.history { background: #f3e8ff; color: #7e22ce; } /* Purple */
+.tag.food { background: #ffedd5; color: #c2410c; } /* Orange */
+.tag.nature { background: #dcfce7; color: #166534; } /* Green */
+.tag.water { background: #e0f2fe; color: #0284c7; } /* Blue */
 
-        /* Hyperlink Styling */
-        .modal-content a {
-            color: #d85a60;
-            text-decoration: none;
-            font-weight: 700;
-            transition: color 0.2s;
-        }
+/* Hyperlinks in Modals */
+.modal-content a {
+color: #d85a60;
+text-decoration: none;
+font-weight: 700;
+transition: color 0.2s;
+}
 
-        .modal-content a:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
-        }
+.modal-content a:hover {
+color: var(--accent-hover);
+text-decoration: underline;
+}
 
-        .modal-content ul {
-            padding-left: 20px;
-            margin-top: 5px;
-        }
-        
-        /* Numbered Map Pins */
-        .custom-pin {
-            background-color: var(--accent-color);
-            border: 3px solid white;
-            border-radius: 50%;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
-            transition: transform 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-family: 'Fredoka', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-        }
+.modal-content ul {
+padding-left: 20px;
+margin-top: 5px;
+}
 
-        .custom-pin:hover {
-            transform: scale(1.2);
-            background-color: var(--accent-hover);
-        }
-    </style>
+.modal-content strong {
+color: #e57373;
+}
+
+/* Numbered Pins */
+.custom-pin {
+background-color: var(--accent-color);
+border: 3px solid white;
+border-radius: 50%;
+box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+transition: transform 0.2s;
+display: flex;
+justify-content: center;
+align-items: center;
+color: white;
+font-family: 'Fredoka', sans-serif;
+font-size: 14px;
+font-weight: 500;
+}
+
+.custom-pin:hover {
+transform: scale(1.2);
+background-color: var(--accent-hover);
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <h1>✈️ Our Italian Adventure 🍕</h1>
-        <p class="subtitle">14 Days of History, Art, and Amazing Food</p>
-    </header>
+<header>
+<h1>✈️ Our Italian Adventure 🍕</h1>
+<p class="subtitle">14 Days of History, Art, and Amazing Food</p>
+</header>
 
-    <div id="map"></div>
+<div id="map"></div>
 
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal()">&times;</button>
-            <div id="itineraryDetails"></div>
-        </div>
-    </div>
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal-content">
+<button class="close-btn" onclick="closeModal()">&times;</button>
+<div id="itineraryDetails"></div>
+</div>
+</div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        const map = L.map('map').setView([43.5, 11.5], 6);
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map = L.map('map').setView([43.5, 11.5], 6);
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap &copy; CARTO',
-            subdomains: 'abcd',
-            maxZoom: 20
-        }).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+attribution: '&copy; OpenStreetMap &copy; CARTO',
+subdomains: 'abcd',
+maxZoom: 20
+}).addTo(map);
 
-        // Added step numbers and start/end identifiers
-        const locations = [
-            { id: 'rome', step: 1, name: 'Start: Rome', coords: [41.9028, 12.4964] },
-            { id: 'assisi', step: 2, name: 'Assisi', coords: [43.0702, 12.6186] },
-            { id: 'florence', step: 3, name: 'Florence', coords: [43.7695, 11.2558] },
-            { id: 'cinque', step: 4, name: 'Cinque Terre', coords: [44.1353, 9.6828] },
-            { id: 'venice', step: 5, name: 'End: Venice', coords: [45.4408, 12.3155] }
-        ];
+// Locations with Step Numbers and Start/End text
+const locations = [
+{ id: 'rome', step: 1, name: 'Start: Rome', coords: [41.9028, 12.4964] },
+{ id: 'assisi', step: 2, name: 'Assisi', coords: [43.0702, 12.6186] },
+{ id: 'florence', step: 3, name: 'Florence', coords: [43.7695, 11.2558] },
+{ id: 'cinque', step: 4, name: 'Cinque Terre', coords: [44.1353, 9.6828] },
+{ id: 'venice', step: 5, name: 'End: Venice', coords: [45.4408, 12.3155] }
+];
 
-        const latlngs = locations.map(loc => loc.coords);
-        L.polyline(latlngs, { color: '#ff9a9e', weight: 4, dashArray: '10, 10', opacity: 0.8 }).addTo(map);
+const latlngs = locations.map(loc => loc.coords);
+L.polyline(latlngs, { color: '#ff9a9e', weight: 4, dashArray: '10, 10', opacity: 0.8 }).addTo(map);
 
-        const itineraryData = {
-            'rome': `
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Colosseum_in_Rome-April_2007-1-_copie_2B.jpg/800px-Colosseum_in_Rome-April_2007-1-_copie_2B.jpg" alt="Colosseum in Rome" class="modal-hero-img">
-                <h2>Days 1–3: Rome 🏛️</h2>
-                
-                <div class="tag-container">
-                    <span class="tag history">🏛️ Ancient Wonders</span>
-                    <span class="tag history">🎨 Baroque Art</span>
-                    <span class="tag food">🍝 Pasta Paradise</span>
-                </div>
+const itineraryData = {
+'rome': `
+               <h2>Days 1–3: Rome 🏛️</h2>
 
-                <details open>
-                    <summary>🛏️ Stay & Logistics</summary>
-                    <div class="details-content">
-                        <p><strong>Where:</strong> Casa di Santa Brigida or Casa Maria Immacolata. Book via <a href="https://www.monasterystays.com/" target="_blank">MonasteryStays.com</a>.</p>
-                        <p><strong>Why here?</strong> These traditional convent stays offer private, air-conditioned rooms right in the historic center. They are quiet, safe, and highly affordable.</p>
-                        <p><strong>Transit:</strong> <a href="https://www.trenitalia.com/en.html" target="_blank">Leonardo Express train</a> from Fiumicino Airport to Roma Termini.</p>
-                    </div>
-                </details>
+               <div class="tag-container">
+                   <span class="tag history">🏛️ Ancient Wonders</span>
+                   <span class="tag history">🎨 Baroque Art</span>
+                   <span class="tag food">🍝 Pasta Paradise</span>
+               </div>
+               
+               <details open>
+                   <summary>🛏️ Stay & Logistics</summary>
+                   <div class="details-content">
+                       <p><strong>Where:</strong> Casa di Santa Brigida or Casa Maria Immacolata (Campo de' Fiori area). Book 3–4 months in advance via <a href="https://www.monasterystays.com/" target="_blank">MonasteryStays.com</a>.</p>
+                       <p><strong>Why here?</strong> These are traditional convent/monastery stays offering private, air-conditioned rooms right in the historic center. They are quiet, incredibly safe, and highly affordable compared to standard hotels.</p>
+                       <p><strong>Arrival Transit:</strong> Take the <a href="https://www.trenitalia.com/en.html" target="_blank">Leonardo Express train</a> from Fiumicino Airport directly to Roma Termini (€14, buy at the station kiosk).</p>
+                   </div>
+               </details>
 
-                <details>
-                    <summary>Day 1: Arrival & Ancient Engineering</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Afternoon:</strong> The <a href="https://en.wikipedia.org/wiki/Pantheon,_Rome" target="_blank">Pantheon</a>. Rebuilt by Emperor Hadrian, it remains the largest unreinforced concrete dome in the world. <em>Pre-book tickets via the <a href="https://portale.museiitaliani.it/b2c/" target="_blank">Musei Italiani site</a>.</em></li>
-                            <li><strong>Evening:</strong> Twilight food walking tour in Trastevere. Historically the working-class district across the Tiber, retaining deep culinary traditions. <em>Pre-book via <a href="https://www.eatingeurope.com/rome/" target="_blank">Eating Europe</a>.</em></li>
-                        </ul>
-                    </div>
-                </details>
+               <details>
+                   <summary>Day 1: Arrival & Ancient Engineering</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>Afternoon:</strong> The <a href="https://en.wikipedia.org/wiki/Pantheon,_Rome" target="_blank">Pantheon</a>. Commissioned by Marcus Agrippa and rebuilt by Emperor Hadrian, it remains the largest unreinforced concrete dome in the world—a testament to brilliant ancient Roman engineering. <em>Pre-book tickets (€5) via the <a href="https://portale.museiitaliani.it/b2c/" target="_blank">official Musei Italiani site</a>.</em></li>
+                           <li><strong>Evening:</strong> Twilight food walking tour in Trastevere. Historically the working-class district across the Tiber River, it retains its medieval charm and deep-rooted culinary traditions. <em>Pre-book 4 weeks out via <a href="https://www.eatingeurope.com/rome/" target="_blank">Eating Europe</a>.</em></li>
+                       </ul>
+                   </div>
+               </details>
 
-                <details>
-                    <summary>Day 2: The Heart of the Ancient World</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Morning:</strong> Colosseum, Roman Forum, and Palatine Hill. The political and religious nucleus of the ancient world. <em>Pre-book exactly 30 days out via <a href="https://parcocolosseo.it/en/" target="_blank">Parco Archeologico del Colosseo</a>.</em></li>
-                            <li><strong>Afternoon:</strong> <a href="https://www.museicapitolini.org/en" target="_blank">Capitoline Museums</a>. The world's oldest public museum (est. 1471), housing the famous bronze she-wolf.</li>
-                        </ul>
-                    </div>
-                </details>
+               <details>
+                   <summary>Day 2: The Heart of the Ancient World</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>Morning:</strong> Colosseum, Roman Forum, and Palatine Hill. The Colosseum was the ultimate symbol of imperial power, while the Forum was the political and religious nucleus of the ancient world. <em>Pre-book exactly 30 days in advance on the <a href="https://parcocolosseo.it/en/" target="_blank">Parco Archeologico del Colosseo site</a>. Select the "Full Experience" ticket for underground access.</em></li>
+                           <li><strong>Afternoon:</strong> <a href="https://www.museicapitolini.org/en" target="_blank">Capitoline Museums</a>. The world's oldest public museum (est. 1471), housing the famous bronze she-wolf nursing Romulus and Remus.</li>
+                       </ul>
+                   </div>
+               </details>
 
-                <details>
-                    <summary>Day 3: The Papal Seat & The Baroque</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Morning:</strong> Vatican Museums & Sistine Chapel. Michelangelo's ceiling was a grueling physical feat that articulated the biblical narrative. <em>Pre-book 60 days ahead via <a href="https://m.museivaticani.va/content/museivaticani-mobile/en.html" target="_blank">Musei Vaticani</a>.</em></li>
-                            <li><strong>Afternoon:</strong> Borghese Gallery. Cardinal Scipione Borghese bankrolled the Baroque era. See Bernini's impossibly soft marbles. <em>Pre-book via <a href="https://galleriaborghese.beniculturali.it/en/" target="_blank">Galleria Borghese</a>.</em></li>
-                        </ul>
-                    </div>
-                </details>
-            `,
-            'assisi': `
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Assisi_panorama.jpg/800px-Assisi_panorama.jpg" alt="Basilica in Assisi" class="modal-hero-img">
-                <h2>Day 4: Assisi 🕊️</h2>
-                
-                <div class="tag-container">
-                    <span class="tag water">🕊️ Spiritual Retreat</span>
-                    <span class="tag nature">🌲 Nature Trails</span>
-                    <span class="tag food">🐗 Umbrian Food</span>
-                </div>
+               <details>
+                   <summary>Day 3: The Papal Seat & The Baroque</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>Morning:</strong> Vatican Museums & Sistine Chapel. Michelangelo's ceiling was a grueling physical feat that visually articulated the biblical narrative for the Christian world. <em>Pre-book exactly 60 days ahead on the <a href="https://m.museivaticani.va/content/museivaticani-mobile/en.html" target="_blank">Musei Vaticani official site</a> (8:00 AM "Prime Experience" recommended to beat crowds).</em></li>
+                           <li><strong>Afternoon:</strong> Borghese Gallery. Cardinal Scipione Borghese's patronage bankrolled the Baroque era. See Bernini's impossibly soft marbles and Caravaggio's dramatic shadows. <em>Pre-book 4–6 weeks ahead on the <a href="https://galleriaborghese.beniculturali.it/en/" target="_blank">Galleria Borghese site</a>.</em></li>
+                       </ul>
+                   </div>
+               </details>
+           `,
+'assisi': `
+               <h2>Day 4: Assisi 🕊️</h2>
 
-                <details open>
-                    <summary>🛏️ Stay & Logistics</summary>
-                    <div class="details-content">
-                        <p><strong>Where:</strong> Monastero Sant'Andrea or Suore Francescane.</p>
-                        <p><strong>Why here?</strong> Assisi is a deeply spiritual medieval hill town. Staying in a convent here immerses you completely in the quiet, historical atmosphere.</p>
-                        <p><strong>Transit:</strong> Morning <a href="https://www.trenitalia.com/en.html" target="_blank">regional train</a> from Roma Termini to Assisi.</p>
-                    </div>
-                </details>
+               <div class="tag-container">
+                   <span class="tag water">🕊️ Spiritual Retreat</span>
+                   <span class="tag nature">🌲 Nature Trails</span>
+                   <span class="tag food">🐗 Umbrian Food</span>
+               </div>
+               
+               <details open>
+                   <summary>🛏️ Stay & Logistics</summary>
+                   <div class="details-content">
+                       <p><strong>Where:</strong> Monastero Sant'Andrea or Suore Francescane.</p>
+                       <p><strong>Why here?</strong> Assisi is a deeply spiritual medieval hill town. Staying in a convent here immerses you completely in the quiet, historical atmosphere of the region.</p>
+                       <p><strong>Transit:</strong> Take a morning <a href="https://www.trenitalia.com/en.html" target="_blank">regional train</a> from Roma Termini to Assisi (approx. 2 hours). Buy tickets at the station or via Trenitalia. Take the local bus or a taxi up the hill to the historic center.</p>
+                   </div>
+               </details>
 
-                <details>
-                    <summary>Day 4: Monastic Life & The Renaissance Spark</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Afternoon:</strong> <a href="https://en.wikipedia.org/wiki/Basilica_of_Saint_Francis_of_Assisi" target="_blank">Basilica of San Francesco</a>. Houses revolutionary frescoes by Giotto and Cimabue—the "missing link" that transitioned flat Byzantine art into 3D realism.</li>
-                            <li><strong>Late Afternoon:</strong> Hike Mount Subasio to the <em>Eremo delle Carceri</em>. This is the remote, forested network of caves where St. Francis retreated to pray.</li>
-                            <li><strong>Evening:</strong> Enjoy traditional Umbrian dinner featuring wild boar ragù or black truffles.</li>
-                        </ul>
-                    </div>
-                </details>
-            `,
-            'florence': `
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Florence_italy_duomo.jpg/800px-Florence_italy_duomo.jpg" alt="Florence Duomo" class="modal-hero-img">
-                <h2>Days 5–7: Florence & Tuscany 🍷</h2>
-                
-                <div class="tag-container">
-                    <span class="tag history">🎨 Renaissance Art</span>
-                    <span class="tag food">🍷 Wine Country</span>
-                    <span class="tag nature">🛵 Vespa Cruising</span>
-                </div>
-                
-                <details open>
-                    <summary>🛏️ Stay & Logistics</summary>
-                    <div class="details-content">
-                        <p><strong>Where:</strong> An Agriturismo like <em>Fattoria Il Milione</em>.</p>
-                        <p><strong>Why here?</strong> An Agriturismo gives you a unique, rustic Tuscan farmhouse experience surrounded by olive groves while still being close to the city center.</p>
-                        <p><strong>Transit:</strong> Regional train from Assisi to Firenze Santa Maria Novella.</p>
-                    </div>
-                </details>
+               <details>
+                   <summary>Day 4: Monastic Life & The Renaissance Spark</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>Afternoon:</strong> <a href="https://en.wikipedia.org/wiki/Basilica_of_Saint_Francis_of_Assisi" target="_blank">Basilica of San Francesco</a>. This UNESCO site houses revolutionary frescoes by Giotto and Cimabue. These artworks are the "missing link" that transitioned flat Byzantine art into the emotional, 3D realism that sparked the Renaissance.</li>
+                           <li><strong>Late Afternoon (Nature):</strong> Hike Mount Subasio to the <em>Eremo delle Carceri</em>. This is the remote, forested network of caves where St. Francis retreated to pray, offering incredible outdoor immersion.</li>
+                           <li><strong>Evening:</strong> Enjoy a quiet, traditional Umbrian dinner featuring wild boar ragù or black truffles.</li>
+                       </ul>
+                   </div>
+               </details>
+           `,
+'florence': `
+               <h2>Days 5–7: Florence & Tuscany 🍷</h2>
 
-                <details>
-                    <summary>Day 5: The Wealth of the Medici</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Afternoon:</strong> Uffizi Gallery. Originally the administrative <a href="https://en.wikipedia.org/wiki/House_of_Medici" target="_blank">Medici family</a> headquarters, whose staggering banking wealth funded the Renaissance. <em>Pre-book via <a href="https://www.b-ticket.com/b-Ticket/uffizi/" target="_blank">B-Ticket</a>.</em></li>
-                            <li><strong>Evening:</strong> Walk across the Ponte Vecchio at sunset.</li>
-                        </ul>
-                    </div>
-                </details>
+               <div class="tag-container">
+                   <span class="tag history">🎨 Renaissance Art</span>
+                   <span class="tag food">🍷 Wine Country</span>
+                   <span class="tag nature">🛵 Vespa Cruising</span>
+               </div>
+               
+               <details open>
+                   <summary>🛏️ Stay & Logistics</summary>
+                   <div class="details-content">
+                       <p><strong>Where:</strong> An Agriturismo like <em>Fattoria Il Milione</em> (just outside the city) or <em>Oblate Guest House</em> (central).</p>
+                       <p><strong>Why here?</strong> An Agriturismo is a working Italian farm/vineyard. It gives you a unique, rustic Tuscan farmhouse experience surrounded by olive groves while still being close to Renaissance art.</p>
+                       <p><strong>Transit:</strong> <a href="https://www.trenitalia.com/en.html" target="_blank">Regional train</a> from Assisi to Firenze Santa Maria Novella (approx. 2.5 hours).</p>
+                   </div>
+               </details>
 
-                <details>
-                    <summary>Day 6: The Symbol of Defiance</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Morning:</strong> Accademia Gallery. Michelangelo's <em>David</em> was commissioned as a political symbol of Florentine defiance against the exiled Medici family. <em>Pre-book via <a href="https://www.b-ticket.com/b-Ticket/uffizi/" target="_blank">B-Ticket</a>.</em></li>
-                            <li><strong>Afternoon:</strong> Florence Duomo. Brunelleschi's double-shell dome was an architectural miracle. <em>Pre-book the "Brunelleschi Pass" via <a href="https://duomo.firenze.it/en/home" target="_blank">Opera di Santa Maria del Fiore</a>.</em></li>
-                        </ul>
-                    </div>
-                </details>
+               <details>
+                   <summary>Day 5: The Wealth of the Medici</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>Afternoon:</strong> Uffizi Gallery. This massive U-shaped building was originally the administrative headquarters for the <a href="https://en.wikipedia.org/wiki/House_of_Medici" target="_blank">Medici family</a>, whose staggering banking wealth funded the artists who ignited the Renaissance. <em>Pre-book 4–6 weeks ahead via <a href="https://www.b-ticket.com/b-Ticket/uffizi/" target="_blank">B-Ticket</a>.</em></li>
+                           <li><strong>Evening:</strong> Walk across the <a href="https://en.wikipedia.org/wiki/Ponte_Vecchio" target="_blank">Ponte Vecchio</a> at sunset. It was the only bridge the retreating Germans didn't destroy in WWII.</li>
+                       </ul>
+                   </div>
+               </details>
 
-                <details>
-                    <summary>Day 7: The Historic Chianti Zone</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>All Day:</strong> Guided vintage Fiat 500 or Vespa tour through the Chianti hills. In 1716, Cosimo III legally defined this region—making it one of the world's first protected wine zones. <em>Pre-book via <a href="https://www.walkaboutflorence.com/" target="_blank">Walkabout Florence</a>.</em></li>
-                        </ul>
-                    </div>
-                </details>
-            `,
-            'cinque': `
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Manarola_-_Cinque_Terre_-_Italy.jpg/800px-Manarola_-_Cinque_Terre_-_Italy.jpg" alt="Cinque Terre Coast" class="modal-hero-img">
-                <h2>Days 8–10: Cinque Terre 🍋</h2>
-                
-                <div class="tag-container">
-                    <span class="tag water">🌊 Coastal Vibes</span>
-                    <span class="tag nature">🥾 Epic Hiking</span>
-                    <span class="tag food">👩‍🍳 Pasta Making</span>
-                </div>
-                
-                <details open>
-                    <summary>🛏️ Stay & Logistics</summary>
-                    <div class="details-content">
-                        <p><strong>Where:</strong> An Affittacamere (guesthouse) like <em>Affittacamere Anna</em> in Levanto.</p>
-                        <p><strong>Why here?</strong> Affittacamere are run by locals, offering a much more authentic, home-grown feel than commercial hotels.</p>
-                        <p><strong>Transit:</strong> Train from Florence to La Spezia Centrale. Buy the <a href="https://www.parconazionale5terre.it/page.php?id=157" target="_blank">Cinque Terre Treno MS Card</a> for unlimited local transit.</p>
-                    </div>
-                </details>
+               <details>
+                   <summary>Day 6: The Symbol of Defiance</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>Morning:</strong> Accademia Gallery. Michelangelo's <em>David</em> was commissioned as a political symbol of Florentine civil liberties and the Republic's defiance against the exiled Medici family. <em>Pre-book 4 weeks out via <a href="https://www.b-ticket.com/b-Ticket/uffizi/" target="_blank">B-Ticket</a>.</em></li>
+                           <li><strong>Afternoon:</strong> Florence Duomo. Filippo Brunelleschi's double-shell dome was an architectural miracle that effectively kicked off the Renaissance building boom. <em>Pre-book the "Brunelleschi Pass" via <a href="https://duomo.firenze.it/en/home" target="_blank">Opera di Santa Maria del Fiore</a>.</em></li>
+                       </ul>
+                   </div>
+               </details>
 
-                <details>
-                    <summary>Day 8: Coastal Isolation</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Afternoon:</strong> Head to Vernazza. These villages were entirely isolated by steep mountains for centuries, birthing fiercely independent local cultures.</li>
-                            <li><strong>Evening:</strong> Walk up the trail to view the Doria Castle ruins (built to protect the village from pirate raids).</li>
-                        </ul>
-                    </div>
-                </details>
+               <details>
+                   <summary>Day 7: The Historic Chianti Zone</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>All Day:</strong> Guided vintage Fiat 500 or Vespa tour through the Chianti hills. In 1716, Cosimo III de' Medici legally defined the boundaries of this region—making it one of the world's first protected wine zones. Includes a rustic lunch at a local estate. <em>Pre-book 4 weeks out via <a href="https://www.walkaboutflorence.com/" target="_blank">Walkabout Florence</a>.</em></li>
+                       </ul>
+                   </div>
+               </details>
+           `,
+'cinque': `
+               <h2>Days 8–10: Cinque Terre 🍋</h2>
 
-                <details>
-                    <summary>Day 9: The Monumental Landscape</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>All Day:</strong> Hike the <a href="https://en.wikipedia.org/wiki/Sentiero_Azzurro" target="_blank">Sentiero Azzurro (Blue Trail)</a>. Observe the dry-stone walls holding up the terraces, carved by hand over centuries by local farmers.</li>
-                        </ul>
-                    </div>
-                </details>
+               <div class="tag-container">
+                   <span class="tag water">🌊 Coastal Vibes</span>
+                   <span class="tag nature">🥾 Epic Hiking</span>
+                   <span class="tag food">👩‍🍳 Pasta Making</span>
+               </div>
+               
+               <details open>
+                   <summary>🛏️ Stay & Logistics</summary>
+                   <div class="details-content">
+                       <p><strong>Where:</strong> An Affittacamere (guesthouse) like <em>Affittacamere Anna</em> in Levanto or <em>Ospitalità Il Borgo</em> in the villages.</p>
+                       <p><strong>Why here?</strong> Affittacamere are run by locals, offering a much more authentic, home-grown feel than the few commercial hotels in the area.</p>
+                       <p><strong>Transit:</strong> <a href="https://www.trenitalia.com/en.html" target="_blank">Train</a> from Florence to La Spezia Centrale. Buy the <strong><a href="https://www.parconazionale5terre.it/page.php?id=157" target="_blank">"Cinque Terre Treno MS Card"</a></strong> at the station for unlimited local trains and trail access.</p>
+                   </div>
+               </details>
 
-                <details>
-                    <summary>Day 10: Culinary Immersion (No Pine Nuts!)</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Morning:</strong> Fresh Pasta class. Ligurian food was shaped by sailors needing long-lasting breads. Master hand-rolled <em>trofie</em> without pine nuts! <em>Pre-book via <a href="https://cinqueterrecookingschool.com/" target="_blank">Cinque Terre Cooking School</a>.</em></li>
-                            <li><strong>Afternoon:</strong> Rent a kayak to view the villages from the water, just as returning sailors would have for centuries.</li>
-                        </ul>
-                    </div>
-                </details>
-            `,
-            'venice': `
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Grand_Canal_Venice.jpg/800px-Grand_Canal_Venice.jpg" alt="Venice Grand Canal" class="modal-hero-img">
-                <h2>Days 11–14: Venice 🛶</h2>
-                
-                <div class="tag-container">
-                    <span class="tag water">🛶 Romantic Canals</span>
-                    <span class="tag history">🎭 Secret History</span>
-                    <span class="tag food">🥂 Cicchetti Crawl</span>
-                </div>
-                
-                <details open>
-                    <summary>🛏️ Stay & Logistics</summary>
-                    <div class="details-content">
-                        <p><strong>Where:</strong> <em>Foresteria Valdese</em> or <em>Istituto San Giuseppe</em>.</p>
-                        <p><strong>Why here?</strong> These historic religious guest houses are located in quiet Venetian neighborhoods, far away from the tourist traps.</p>
-                        <p><strong>Transit:</strong> High-speed train from Cinque Terre. Pre-book 2 months ahead on <a href="https://www.trenitalia.com/en.html" target="_blank">Trenitalia</a>.</p>
-                    </div>
-                </details>
+               <details>
+                   <summary>Day 8: Coastal Isolation</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>Afternoon:</strong> Head to Vernazza. These five villages date back to the 11th century. For hundreds of years, they were entirely isolated by the steep mountains, accessible only by sea, birthing fiercely independent local cultures.</li>
+                           <li><strong>Evening:</strong> Walk up the trail toward Monterosso to view the Doria Castle ruins (built to protect the village from pirate raids).</li>
+                       </ul>
+                   </div>
+               </details>
 
-                <details>
-                    <summary>Day 11: Across the North</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Afternoon:</strong> Take the Vaporetto (water bus) down the Grand Canal, witnessing the decaying, sinking grandeur of the Venetian palazzos.</li>
-                        </ul>
-                    </div>
-                </details>
+               <details>
+                   <summary>Day 9: The Monumental Landscape</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>All Day:</strong> Hike the <a href="https://en.wikipedia.org/wiki/Sentiero_Azzurro" target="_blank">Sentiero Azzurro (Blue Trail)</a>. Start early (8 AM). As you hike, observe the dry-stone walls holding up the terraces. Over centuries, local farmers carved the mountainside by hand to cultivate grapes and olives.</li>
+                       </ul>
+                   </div>
+               </details>
 
-                <details>
-                    <summary>Day 12: Secrets of the Republic & Casanova</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Morning:</strong> Doge’s Palace. Take the "Secret Itineraries" tour into the lead-roofed prison cells—including where <a href="https://en.wikipedia.org/wiki/Giacomo_Casanova" target="_blank">Giacomo Casanova</a> executed his legendary escape in 1756. <em>Pre-book on the <a href="https://palazzoducale.visitmuve.it/en/home/" target="_blank">Palazzo Ducale website</a>.</em></li>
-                            <li><strong>Evening:</strong> A "Cicchetti crawl" in Cannaregio. This tapas tradition evolved from merchants needing quick bites around the Rialto markets.</li>
-                        </ul>
-                    </div>
-                </details>
+               <details>
+                    <summary>Day 10: Culinary Immersion</summary>
+                   <div class="details-content">
+                       <ul>
+                            <li><strong>Morning:</strong> Fresh Pasta and Focaccia class. Ligurian food was shaped by sailors needing long-lasting breads. You'll master hand-rolled pasta shapes like <em>trofie</em> paired with fresh seafood and tomato sauces! <em>Pre-book 4 weeks ahead via <a href="https://cinqueterrecookingschool.com/" target="_blank">Cinque Terre Cooking School</a>.</em></li>
+                           <li><strong>Afternoon:</strong> Rent a kayak in Riomaggiore or Monterosso to view the villages from the water, just as returning sailors would have for centuries.</li>
+                       </ul>
+                   </div>
+               </details>
+           `,
+'venice': `
+               <h2>Days 11–14: Venice 🛶</h2>
 
-                <details>
-                    <summary>Day 13: The Artisan Monopolies</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Morning:</strong> Vaporetto to Murano and Burano. In 1291, the Republic forced all glassmakers here to violently guard the lucrative secrets of clear glassmaking from the world.</li>
-                            <li><strong>Evening:</strong> Sunset gondola ride. The asymmetric shape evolved specifically to navigate the shallow, winding canals of the lagoon.</li>
-                        </ul>
-                    </div>
-                </details>
+               <div class="tag-container">
+                   <span class="tag water">🛶 Romantic Canals</span>
+                   <span class="tag history">🎭 Secret History</span>
+                   <span class="tag food">🥂 Cicchetti Crawl</span>
+               </div>
+               
+               <details open>
+                   <summary>🛏️ Stay & Logistics</summary>
+                   <div class="details-content">
+                       <p><strong>Where:</strong> <em>Foresteria Valdese</em> or <em>Istituto San Giuseppe</em>. Book directly 3 months ahead.</p>
+                       <p><strong>Why here?</strong> These are historic religious guest houses located in genuine, quiet Venetian neighborhoods (Castello or Cannaregio), far away from the tourist traps of St. Mark's.</p>
+                       <p><strong>Transit:</strong> High-speed train from Cinque Terre to Venice Santa Lucia (approx. 4.5 hours). Pre-book 2 months ahead on <a href="https://www.trenitalia.com/en.html" target="_blank">Trenitalia</a>.</p>
+                   </div>
+               </details>
 
-                <details>
-                    <summary>Day 14: Departure</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>Transit:</strong> Take the Alilaguna water bus or the ATVO land bus to Venice Marco Polo Airport (VCE) for your journey home!</li>
-                        </ul>
-                    </div>
-                </details>
-            `
-        };
+               <details>
+                   <summary>Day 11: Across the North</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>Afternoon:</strong> Arrive at the station and take the Vaporetto (water bus) down the Grand Canal to your lodging, witnessing the decaying, sinking grandeur of the Venetian palazzos.</li>
+                       </ul>
+                   </div>
+               </details>
 
-        // Render numbered markers dynamically using the "step" variable
-        locations.forEach(loc => {
-            const numberedIcon = L.divIcon({ 
-                className: 'custom-pin', 
-                html: `<span>${loc.step}</span>`,
-                iconSize: [28, 28], 
-                iconAnchor: [14, 14] 
-            });
-            
-            const marker = L.marker(loc.coords, { icon: numberedIcon }).addTo(map);
-            marker.bindTooltip(loc.name, { permanent: false, direction: 'top' });
-            marker.on('click', () => {
-                document.getElementById('itineraryDetails').innerHTML = itineraryData[loc.id];
-                document.getElementById('modalOverlay').classList.add('active');
-            });
-        });
+               <details>
+                   <summary>Day 12: Secrets of the Republic & Casanova</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>Morning:</strong> Doge’s Palace. For a thousand years, the Venetian Republic was a ridiculously wealthy maritime empire. Take the "Secret Itineraries" tour into the hidden offices and the lead-roofed prison cells—including the exact cell where <a href="https://en.wikipedia.org/wiki/Giacomo_Casanova" target="_blank">Giacomo Casanova</a> executed his legendary escape in 1756. <em>Pre-book on the <a href="https://palazzoducale.visitmuve.it/en/home/" target="_blank">Palazzo Ducale website</a>.</em></li>
+                           <li><strong>Evening:</strong> A "Cicchetti crawl" in Cannaregio. This Venetian tapas tradition evolved from merchants needing quick bites of seafood and wine while doing business around the Rialto markets.</li>
+                       </ul>
+                   </div>
+               </details>
 
-        function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
-        document.getElementById('modalOverlay').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
-    </script>
+               <details>
+                   <summary>Day 13: The Artisan Monopolies</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>Morning:</strong> 24-hour Vaporetto pass to Murano and Burano. In 1291, the Republic forced all glassmakers to move to Murano to isolate the artisans and violently guard the lucrative secrets of clear glassmaking from the world.</li>
+                           <li><strong>Evening:</strong> Sunset gondola ride. <em>No pre-booking needed.</em> The asymmetric shape of the gondola and the single oar evolved specifically to navigate the shallow, winding canals of the lagoon.</li>
+                       </ul>
+                   </div>
+               </details>
+
+               <details>
+                   <summary>Day 14: Departure</summary>
+                   <div class="details-content">
+                       <ul>
+                           <li><strong>Transit:</strong> Take the Alilaguna water bus or the ATVO land bus from Piazzale Roma to Venice Marco Polo Airport (VCE) for your journey home!</li>
+                       </ul>
+                   </div>
+               </details>
+           `
+};
+
+// Render numbered markers dynamically
+locations.forEach(loc => {
+    const numberedIcon = L.divIcon({ 
+        className: 'custom-pin', 
+        html: `<span>${loc.step}</span>`,
+        iconSize: [28, 28], 
+        iconAnchor: [14, 14] 
+    });
+    
+    const marker = L.marker(loc.coords, { icon: numberedIcon }).addTo(map);
+    
+    // Bind tooltip showing the name (and Start/End designations)
+    marker.bindTooltip(loc.name, { permanent: false, direction: 'top' });
+    
+    marker.on('click', () => {
+        document.getElementById('itineraryDetails').innerHTML = itineraryData[loc.id];
+        document.getElementById('modalOverlay').classList.add('active');
+    });
+});
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+document.getElementById('modalOverlay').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
+</script>
 </body>
 </html>
