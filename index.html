@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Italian Adventure</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        :root {
+            --primary-bg: #fdfaf6;
+            --accent-color: #ff9a9e;
+            --text-main: #4a4a4a;
+            --text-light: #7a7a7a;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        h1 {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--accent-color);
+            margin: 0;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+        }
+
+        p.subtitle {
+            margin: 5px 0 0 0;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        #map {
+            flex-grow: 1;
+            width: 100%;
+            z-index: 1;
+        }
+
+        /* Modal Styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 650px;
+            max-height: 85vh;
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--accent-color);
+        }
+
+        /* Itinerary Typography inside Modal */
+        .modal-content h2 {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--accent-color);
+            border-bottom: 2px dashed #f1f1f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .modal-content h3 {
+            color: #5c7c8a;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .modal-content p, .modal-content li {
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+
+        .modal-content ul {
+            padding-left: 20px;
+        }
+
+        .modal-content strong {
+            color: #e57373;
+        }
+        
+        /* Custom map marker style */
+        .custom-pin {
+            background-color: var(--accent-color);
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>✈️ Our Italian Adventure 🍕</h1>
+        <p class="subtitle">14 Days of History, Art, and Amazing Food</p>
+    </header>
+
+    <div id="map"></div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <div id="itineraryDetails">
+                </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // 1. Initialize Map (Centered on Italy)
+        const map = L.map('map').setView([43.5, 11.5], 6);
+
+        // 2. Add Modern, Light Map Tiles (CartoDB Positron for a cute aesthetic)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
+        }).addTo(map);
+
+        // 3. Define the Locations & Coordinates
+        const locations = [
+            { id: 'rome', name: 'Rome', coords: [41.9028, 12.4964] },
+            { id: 'assisi', name: 'Assisi', coords: [43.0702, 12.6186] },
+            { id: 'florence', name: 'Florence', coords: [43.7695, 11.2558] },
+            { id: 'cinque', name: 'Cinque Terre', coords: [44.1353, 9.6828] },
+            { id: 'venice', name: 'Venice', coords: [45.4408, 12.3155] }
+        ];
+
+        // 4. Create a dashed line connecting the cities
+        const latlngs = locations.map(loc => loc.coords);
+        const polyline = L.polyline(latlngs, {
+            color: '#ff9a9e',
+            weight: 4,
+            dashArray: '10, 10', // Creates the dotted/dashed effect
+            opacity: 0.8
+        }).addTo(map);
+
+        // 5. Create Custom Marker Icon
+        const customIcon = L.divIcon({
+            className: 'custom-pin',
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
+        });
+
+        // 6. Itinerary Content Data
+        const itineraryData = {
+            'rome': `
+                <h2>Days 1–3: Rome 🏛️</h2>
+                <p><strong>Accommodation:</strong> Casa di Santa Brigida or Casa Maria Immacolata (~$110/night).<br>
+                <strong>Transit:</strong> Leonardo Express train from FCO to Roma Termini.</p>
+                <h3>Day 1: Arrival & Ancient Engineering</h3>
+                <ul>
+                    <li><strong>Afternoon:</strong> The Pantheon. Built by Emperor Hadrian, it remains the largest unreinforced concrete dome in the world.</li>
+                    <li><strong>Evening:</strong> Twilight food walking tour in Trastevere. (Pre-book via Eating Europe).</li>
+                </ul>
+                <h3>Day 2: The Heart of the Ancient World</h3>
+                <ul>
+                    <li><strong>Morning:</strong> Colosseum, Roman Forum, and Palatine Hill. (Pre-book exactly 30 days out for "Full Experience").</li>
+                    <li><strong>Afternoon:</strong> Capitoline Museums to see the bronze she-wolf nursing Romulus and Remus.</li>
+                </ul>
+                <h3>Day 3: The Papal Seat & The Baroque</h3>
+                <ul>
+                    <li><strong>Morning:</strong> Vatican Museums & Sistine Chapel. (Pre-book exactly 60 days ahead).</li>
+                    <li><strong>Afternoon:</strong> Borghese Gallery. Experience Bernini's marbles and Caravaggio's mastery of shadow. (Pre-book 4-6 weeks ahead).</li>
+                </ul>
+            `,
+            'assisi': `
+                <h2>Day 4: Assisi 🕊️</h2>
+                <p><strong>Accommodation:</strong> Monastero Sant'Andrea or Suore Francescane (~$90–$110/night).<br>
+                <strong>Transit:</strong> Morning regional train from Roma Termini (approx. 2 hours).</p>
+                <h3>Monastic Life & The Spark of the Renaissance</h3>
+                <ul>
+                    <li><strong>Afternoon:</strong> Basilica of San Francesco. This UNESCO site houses revolutionary frescoes by Giotto and Cimabue—the missing link between flat Byzantine art and the 3D realism of the Renaissance.</li>
+                    <li><strong>Late Afternoon:</strong> Hike the slopes of Mount Subasio to the Eremo delle Carceri, the peaceful forested caves where St. Francis retreated.</li>
+                    <li><strong>Evening:</strong> Traditional Umbrian dinner featuring wild boar ragù or black truffles.</li>
+                </ul>
+            `,
+            'florence': `
+                <h2>Days 5–7: Florence & Tuscany 🍷</h2>
+                <p><strong>Accommodation:</strong> An Agriturismo like Fattoria Il Milione or Oblate Guest House (~$120/night).<br>
+                <strong>Transit:</strong> Regional train from Assisi to Firenze S.M. Novella (approx 2.5 hours).</p>
+                <h3>Day 5: The Wealth of the Medici</h3>
+                <ul>
+                    <li><strong>Afternoon:</strong> Uffizi Gallery. Once the administrative headquarters for the Medici family banking empire. (Pre-book 4-6 weeks ahead via B-Ticket).</li>
+                    <li><strong>Evening:</strong> Walk across the historic Ponte Vecchio at sunset.</li>
+                </ul>
+                <h3>Day 6: The Symbol of Defiance</h3>
+                <ul>
+                    <li><strong>Morning:</strong> Accademia Gallery. Michelangelo's David, commissioned as a political symbol of Florentine civil liberties.</li>
+                    <li><strong>Afternoon:</strong> Florence Duomo. Climb Brunelleschi's double-shell dome. (Pre-book Brunelleschi Pass).</li>
+                </ul>
+                <h3>Day 7: Historic Chianti Zone</h3>
+                <ul>
+                    <li><strong>All Day:</strong> Guided vintage Fiat 500 or Vespa tour through the Chianti hills, one of the world's first protected wine zones. Includes rustic lunch.</li>
+                </ul>
+            `,
+            'cinque': `
+                <h2>Days 8–10: Cinque Terre 🍋</h2>
+                <p><strong>Accommodation:</strong> Affittacamere Anna in Levanto or Ospitalità Il Borgo (~$130/night).<br>
+                <strong>Transit:</strong> Train from Florence to La Spezia, then local express.</p>
+                <h3>Day 8: Coastal Isolation</h3>
+                <ul>
+                    <li><strong>Afternoon:</strong> Arrive, buy the Cinque Terre Treno MS Card. Head to Vernazza. These isolated villages birthed fiercely independent local cultures.</li>
+                    <li><strong>Evening:</strong> View the Doria Castle ruins (built to deter pirates) at sunset.</li>
+                </ul>
+                <h3>Day 9: The Monumental Landscape</h3>
+                <ul>
+                    <li><strong>All Day:</strong> Hike the Sentiero Azzurro (Blue Trail). Observe the dry-stone walls holding up the terraces, carved by hand over centuries.</li>
+                </ul>
+                <h3>Day 10: Culinary Immersion</h3>
+                <ul>
+                    <li><strong>Morning:</strong> Fresh Pasta and Focaccia class. Learn to make trofie with tomato & seafood sauces (completely pine-nut free!).</li>
+                    <li><strong>Afternoon:</strong> Rent a kayak to view the colorful cliffside villages from the water.</li>
+                </ul>
+            `,
+            'venice': `
+                <h2>Days 11–14: Venice 🛶</h2>
+                <p><strong>Accommodation:</strong> Foresteria Valdese or Istituto San Giuseppe (~$120/night).<br>
+                <strong>Transit:</strong> Train from Cinque Terre to Venice Santa Lucia (approx 4.5 hrs).</p>
+                <h3>Day 11: Across the North</h3>
+                <ul>
+                    <li><strong>Afternoon:</strong> Vaporetto down the Grand Canal, witnessing the sinking grandeur of the Venetian palazzos.</li>
+                </ul>
+                <h3>Day 12: Secrets of the Republic & Casanova</h3>
+                <ul>
+                    <li><strong>Morning:</strong> Doge's Palace "Secret Itineraries" tour. Visit the interrogation rooms and the exact lead-roofed cell where Giacomo Casanova executed his legendary escape in 1756.</li>
+                    <li><strong>Evening:</strong> "Cicchetti crawl" in Cannaregio. Tapas-style seafood and wine.</li>
+                </ul>
+                <h3>Day 13: Artisan Monopolies</h3>
+                <ul>
+                    <li><strong>Morning:</strong> Murano and Burano. In 1291, the Republic forced all glassmakers here to violently guard the secrets of clear glassmaking.</li>
+                    <li><strong>Evening:</strong> Sunset gondola ride at a quieter station.</li>
+                </ul>
+                <h3>Day 14: Departure</h3>
+                <ul>
+                    <li><strong>Transit:</strong> Alilaguna water bus or ATVO land bus to Marco Polo Airport (VCE). Arrivederci!</li>
+                </ul>
+            `
+        };
+
+        // 7. Add Markers and Click Events
+        locations.forEach(loc => {
+            const marker = L.marker(loc.coords, { icon: customIcon }).addTo(map);
+            
+            // Add tooltip that shows on hover
+            marker.bindTooltip(loc.name, {
+                permanent: false, 
+                direction: 'top',
+                className: 'custom-tooltip'
+            });
+
+            // On click, open modal with data
+            marker.on('click', () => {
+                document.getElementById('itineraryDetails').innerHTML = itineraryData[loc.id];
+                document.getElementById('modalOverlay').classList.add('active');
+            });
+        });
+
+        // 8. Modal Logic
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        // Close modal when clicking outside the box
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if(e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
