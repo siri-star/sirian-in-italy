@@ -10,18 +10,14 @@
 
     <style>
         :root {
-            /* Modern Italian Palette */
             --primary-bg: #F9F6F0; 
             --accent-color: #C84C35; 
             --accent-hover: #A63B28;
-            
-            /* Pin Colors */
             --food-color: #D34E24;
             --shop-color: #205E7D;
             --stay-color: #B8860B; 
             --sight-color: #722F37; 
             --nature-color: #4A6B53; 
-            
             --text-main: #2C2C2C;
             --text-light: #666666;
             --card-bg: #FFFFFF;
@@ -241,6 +237,66 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
+        /* CYOA Styles */
+        .cyoa-container {
+            margin: 15px 0;
+            padding: 20px;
+            background: #FAFAFA;
+            border-radius: 12px;
+            border: 2px dashed #EBE6DE;
+        }
+
+        .cyoa-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .cyoa-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .cyoa-btn {
+            flex: 1;
+            padding: 10px 5px;
+            border: 2px solid var(--accent-color);
+            background: transparent;
+            color: var(--accent-color);
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .cyoa-btn.active {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(200, 76, 53, 0.2);
+        }
+
+        .cyoa-btn:hover:not(.active) {
+            background: rgba(200, 76, 53, 0.05);
+        }
+
+        .cyoa-content {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .cyoa-content ul { margin: 0; padding-left: 20px; }
+        .cyoa-content li { margin-bottom: 8px; }
+
         .why-block {
             background: #F4E8EA;
             border-left: 4px solid #722F37;
@@ -250,19 +306,8 @@
             text-align: left;
         }
 
-        .why-block h3 {
-            margin-top: 0;
-            color: #722F37;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            margin-bottom: 8px;
-        }
-
-        .why-block p {
-            margin: 0;
-            color: var(--text-main);
-            font-style: italic;
-        }
+        .why-block h3 { margin-top: 0; color: #722F37; font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 8px; }
+        .why-block p { margin: 0; color: var(--text-main); font-style: italic; }
 
         .next-btn {
             background-color: var(--accent-color);
@@ -351,12 +396,7 @@
             font-weight: 700;
         }
 
-        .custom-pin:hover {
-            transform: scale(1.15) translateY(-5px);
-            background-color: var(--accent-hover);
-            box-shadow: 0 6px 15px rgba(200,76,53,0.4);
-        }
-
+        .custom-pin:hover { transform: scale(1.15) translateY(-5px); background-color: var(--accent-hover); box-shadow: 0 6px 15px rgba(200,76,53,0.4); }
         .food-pin { background-color: var(--food-color); border-color: #FCEEEB; font-size: 14px; }
         .food-pin:hover { background-color: #BA421D; }
         .shop-pin { background-color: var(--shop-color); border-color: #E6F0F5; font-size: 14px; }
@@ -417,7 +457,16 @@
             maxZoom: 20
         }).addTo(map);
 
-        // 1. The Main City Hubs
+        // State object to track CYOA choices
+        const adventureState = {
+            rome: 'A',
+            assisi: 'A',
+            florence: 'A',
+            cinque: 'A',
+            venice: 'A'
+        };
+
+        // Main City Hubs
         const locations = [
             { id: 'rome', step: 1, name: 'Start: Rome', coords: [41.9028, 12.4964] },
             { id: 'assisi', step: 2, name: 'Assisi', coords: [43.0702, 12.6186] },
@@ -426,310 +475,349 @@
             { id: 'venice', step: 5, name: 'End: Venice', coords: [45.4408, 12.3155] }
         ];
 
-        // 2. Extra Locations (Informational with Hyperlinks & Deep Context)
+        // Extra Locations
         const extraLocations = [
-            // ROME
-            { id: 'rome-stay', type: 'stay', emoji: '🛏️', name: 'Casa di Santa Brigida', coords: [41.8955, 12.4711], desc: "Located off Piazza Farnese, this traditional convent stay run by the Birgittine Sisters offers a tranquil, historic base right in the heart of the city. Booking is available directly through <a href='https://www.monasterystays.com/' target='_blank'>MonasteryStays</a>." },
-            { id: 'pantheon', type: 'sight', emoji: '🏛️', name: 'The Pantheon', coords: [41.8986, 12.4769], desc: "Built around 125 AD, the Pantheon features a perfectly proportioned unreinforced concrete dome and a central oculus. It houses the tombs of artist Raphael and King Victor Emmanuel II. Tickets available via the <a href='https://portale.museiitaliani.it/b2c/' target='_blank'>Musei Italiani site</a>." },
-            { id: 'colosseum', type: 'sight', emoji: '⚔️', name: 'Colosseum & Roman Forum', coords: [41.8902, 12.4922], desc: "The Flavian Amphitheatre (completed in 80 AD) once held 50,000 spectators for gladiatorial contests. Adjacent lies the Forum, the excavated heart of ancient Roman politics and commerce. <a href='https://parcocolosseo.it/en/' target='_blank'>Official Parco Colosseo Site</a>." },
-            { id: 'vatican', type: 'sight', emoji: '🖼️', name: 'Vatican Museums & Sistine Chapel', coords: [41.9065, 12.4536], desc: "Spanning 54 galleries, the museums house centuries of papal art acquisitions, culminating in Michelangelo's breathtaking Sistine Chapel frescoes painted between 1508 and 1512. <a href='https://m.museivaticani.va/content/museivaticani-mobile/en.html' target='_blank'>Book Prime Experience Here</a>." },
-            { id: 'borghese', type: 'sight', emoji: '🎨', name: 'Borghese Gallery', coords: [41.9139, 12.4922], desc: "Set in the Villa Borghese Pinciana, this gallery contains masterpieces of the Renaissance and Baroque, including Bernini's <em>Apollo and Daphne</em> and Caravaggio's dramatic chiaroscuro works. <a href='https://galleriaborghese.beniculturali.it/en/' target='_blank'>Official Booking</a>." },
+            { id: 'rome-stay', type: 'stay', emoji: '🛏️', name: 'Casa di Santa Brigida', coords: [41.8955, 12.4711], desc: "Located off Piazza Farnese, this traditional convent stay run by the Birgittine Sisters offers a tranquil, historic base right in the heart of the city." },
+            { id: 'colosseum', type: 'sight', emoji: '⚔️', name: 'Colosseum & Roman Forum', coords: [41.8902, 12.4922], desc: "The Flavian Amphitheatre (completed in 80 AD) once held 50,000 spectators for gladiatorial contests. Adjacent lies the Forum, the excavated heart of ancient Roman politics and commerce." },
             { id: 'taverna', type: 'food', emoji: '🍝', name: 'La Taverna dei Fori Imperiali', coords: [41.8943, 12.4891], desc: "A renowned, family-run restaurant on Via della Madonna dei Monti serving classic Roman dishes like <em>Abbacchio al Forno</em> (roast lamb) and crispy <em>Cacio e Pepe</em>." },
             { id: 'maritozzaro', type: 'food', emoji: '🥐', name: 'Il Maritozzaro', coords: [41.8814, 12.4646], desc: "A legendary 1960s café famous across Rome for serving the ultimate <em>Maritozzo</em>—a sweet brioche-like bun overflowing with freshly whipped panna." },
-            { id: 'boschetto', type: 'shop', emoji: '🛍️', name: 'Via del Boschetto', coords: [41.8967, 12.4905], desc: "The artistic soul of the Monti district, known for its bohemian vibe, independent artisan jewelry makers, and curated vintage clothing boutiques." },
             
-            // ASSISI
             { id: 'assisi-stay', type: 'stay', emoji: '🛏️', name: 'Monastero Sant\'Andrea', coords: [43.0715, 12.6135], desc: "Run by Franciscan sisters, this medieval stone monastery offers panoramic views of the Umbrian valley and a profoundly quiet, spiritual atmosphere." },
-            { id: 'basilica', type: 'sight', emoji: '⛪', name: 'Basilica of San Francesco', coords: [43.0745, 12.6062], desc: "Consecrated in 1228, this complex features an Upper and Lower basilica adorned with groundbreaking frescoes by Giotto detailing the life of St. Francis. <a href='https://www.sanfrancescoassisi.org/en/' target='_blank'>Official Site</a>." },
-            { id: 'eremo', type: 'nature', emoji: '🌲', name: 'Eremo delle Carceri', coords: [43.0645, 12.6515], desc: "A steep 4km hike into a dense oak forest reveals this network of tiny chapels and caves carved directly into the rock where St. Francis retreated for isolated prayer." },
             { id: 'pallotta', type: 'food', emoji: '🍷', name: 'Trattoria Pallotta', coords: [43.0712, 12.6163], desc: "Situated in Piazza del Comune under historic stone vaults, this trattoria specializes in Umbrian <em>Stringozzi</em> pasta, black truffles, and rich wild boar ragù." },
-            { id: 'ceramics', type: 'shop', emoji: '🏺', name: 'Deruta Ceramics Artisans', coords: [43.0720, 12.6150], desc: "Assisi preserves the local Umbrian tradition of Majolica pottery, recognizable by its vibrant blues, yellows, and intricate geometric Renaissance patterns." },
             
-            // FLORENCE
             { id: 'florence-stay', type: 'stay', emoji: '🛏️', name: 'Fattoria Il Milione', coords: [43.7380, 11.2185], desc: "A stunning 15th-century estate set on 50 hectares of parkland in the Chianti hills, acting as an authentic Agriturismo base just outside the bustling city." },
-            { id: 'uffizi', type: 'sight', emoji: '🖼️', name: 'Uffizi Gallery', coords: [43.7677, 11.2556], desc: "Designed by Vasari, the Uffizi houses the world's greatest collection of Italian Renaissance art, including Botticelli's <em>Birth of Venus</em>. <a href='https://www.uffizi.it/en/the-uffizi' target='_blank'>Official Uffizi Site</a>." },
-            { id: 'accademia', type: 'sight', emoji: '🗿', name: 'Accademia Gallery', coords: [43.7769, 11.2585], desc: "Founded in 1784, this gallery's crown jewel is Michelangelo's <em>David</em> (1504), alongside his powerful, unfinished <em>Slaves</em> struggling to emerge from their marble blocks. <a href='https://www.galleriaaccademiafirenze.it/en/' target='_blank'>Accademia Tickets</a>." },
-            { id: 'duomo', type: 'sight', emoji: '⛪', name: 'Florence Duomo', coords: [43.7731, 11.2560], desc: "The Cattedrale di Santa Maria del Fiore, famous for Brunelleschi's massive red-tiled dome. Climbing it requires navigating 463 narrow stone steps. <a href='https://duomo.firenze.it/en/home' target='_blank'>Brunelleschi Pass</a>." },
-            { id: 'vinaio', type: 'food', emoji: '🥪', name: "All'Antico Vinaio", coords: [43.7684, 11.2573], desc: "Located on Via dei Neri, this is Italy's most famous street food spot, serving massive, freshly baked schiacciata bread overflowing with Tuscan meats and truffle creams. <a href='https://www.allanticovinaio.com/' target='_blank'>View Menu</a>." },
-            { id: 'cuoio', type: 'shop', emoji: '👜', name: 'Scuola del Cuoio', coords: [43.7681, 11.2618], desc: "Founded post-WWII to teach orphans a trade, this leather school sits inside the Santa Croce dormitories. Visitors can watch masters tool and gild authentic Florentine leather. <a href='https://scuoladelcuoio.it/en/' target='_blank'>Learn More</a>." },
+            { id: 'vinaio', type: 'food', emoji: '🥪', name: "All'Antico Vinaio", coords: [43.7684, 11.2573], desc: "Located on Via dei Neri, this is Italy's most famous street food spot, serving massive, freshly baked schiacciata bread overflowing with Tuscan meats and truffle creams." },
             
-            // CINQUE TERRE
-            { id: 'cinque-stay', type: 'stay', emoji: '🛏️', name: 'Affittacamere Anna', coords: [44.1705, 9.6148], desc: "A comfortable, locally-run guesthouse basecamp in Levanto, providing a quiet escape from the heavily trafficked five main villages while sitting just a 5-minute train ride away." },
-            { id: 'vernazza', type: 'sight', emoji: '🏰', name: 'Vernazza & Doria Castle', coords: [44.1352, 9.6830], desc: "Arguably the most picturesque of the villages, characterized by steep, narrow <em>carrugi</em> (alleys) leading up to an 11th-century watchtower with 360-degree sea views." },
-            { id: 'sentiero', type: 'nature', emoji: '🥾', name: 'Sentiero Azzurro (Blue Trail)', coords: [44.1177, 9.7123], desc: "A legendary 12km coastal path connecting the villages. Hikers navigate cliffside vineyards and olive groves. Access requires purchasing the <a href='https://www.parconazionale5terre.it/page.php?id=157' target='_blank'>Cinque Terre MS Card</a>." },
-            { id: 'nessun', type: 'food', emoji: '🥂', name: 'Nessun Dorma', coords: [44.1065, 9.7275], desc: "A world-famous Manarola cliffside terrace. They strictly serve no pizza or pasta, focusing entirely on local bruschetta, meat platters, and pesto making. <a href='https://www.nessundormacinqueterre.com/' target='_blank'>Download their virtual queue app</a>." },
-            { id: 'pescato', type: 'food', emoji: '🍤', name: 'Il Pescato Cucinato', coords: [44.0984, 9.7394], desc: "A beloved 'hole in the wall' in Riomaggiore frying up the daily catch. Known for their legendary <em>fritto misto</em> served in paper cones, perfect for eating on the harbor rocks." },
+            { id: 'cinque-stay', type: 'stay', emoji: '🛏️', name: 'Affittacamere Anna', coords: [44.1705, 9.6148], desc: "A comfortable, locally-run guesthouse basecamp in Levanto, providing a quiet escape from the heavily trafficked five main villages." },
+            { id: 'nessun', type: 'food', emoji: '🥂', name: 'Nessun Dorma', coords: [44.1065, 9.7275], desc: "A world-famous Manarola cliffside terrace focusing entirely on local bruschetta, meat platters, and pesto making." },
             
-            // VENICE
             { id: 'venice-stay', type: 'stay', emoji: '🛏️', name: 'Foresteria Valdese', coords: [45.4374, 12.3392], desc: "Located in the Castello district inside the historic Palazzo Cavagnis. Rooms feature 16th-century frescoes, and proceeds support Waldensian charities." },
-            { id: 'doge', type: 'sight', emoji: '🏛️', name: "Doge's Palace", coords: [45.4337, 12.3404], desc: "A Venetian Gothic masterpiece and the historical seat of the Republic's power. It connects to the grim prison cells via the famous Bridge of Sighs. <a href='https://palazzoducale.visitmuve.it/en/home/' target='_blank'>Official Tickets</a>." },
-            { id: 'murano', type: 'sight', emoji: '🔥', name: 'Murano Glass Island', coords: [45.4578, 12.3533], desc: "A short Vaporetto ride away, this island has been the global hub of elite glassmaking since 1291. Visitors can watch master artisans manipulate glowing silica in massive furnaces." },
-            { id: 'domori', type: 'food', emoji: '🍢', name: 'Cantina Do Mori', coords: [45.4388, 12.3338], desc: "Tucked into San Polo 429 beneath hanging copper pots, this is rumored to have been Casanova's watering hole. A mandatory stop for <em>cicchetti</em> (Venetian tapas)." },
-            { id: 'macana', type: 'shop', emoji: '🎭', name: "Ca' Macana Mask Makers", coords: [45.4316, 12.3242], desc: "Located in Dorsoduro, this elite workshop creates authentic papier-mâché Bauta and Volto masks, completely eschewing modern plastics. <a href='https://www.camacana.com/' target='_blank'>Book a workshop here</a>." }
+            { id: 'domori', type: 'food', emoji: '🍢', name: 'Cantina Do Mori', coords: [45.4388, 12.3338], desc: "Tucked into San Polo 429 beneath hanging copper pots, this is rumored to have been Casanova's watering hole. A mandatory stop for <em>cicchetti</em> (Venetian tapas)." }
         ];
-
-        // Main City Card Content (WITH TIMESTAMPS!)
-        const itineraryData = {
-            'rome': `
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Colosseum_in_Rome-April_2007-1-_copie_2B.jpg/800px-Colosseum_in_Rome-April_2007-1-_copie_2B.jpg" alt="Colosseum in Rome" class="modal-hero-img">
-                <h2>Days 1–3: Rome</h2>
-                <div class="tag-container">
-                    <span class="tag history">🏛️ Ancient Wonders</span>
-                    <span class="tag history">🎨 Baroque Art</span>
-                </div>
-                
-                <div class="why-block">
-                    <h3>💜 Why I chose this for us</h3>
-                    <p>[I will add my personal note here...]</p>
-                </div>
-
-                <details open>
-                    <summary>Stay & Logistics</summary>
-                    <div class="details-content">
-                        <p><strong>Where:</strong> Casa di Santa Brigida or Casa Maria Immacolata. Book via <a href="https://www.monasterystays.com/" target="_blank">MonasteryStays.com</a>.</p>
-                        <p><strong>Arrival Transit:</strong> Take the <a href="https://www.trenitalia.com/en.html" target="_blank">Leonardo Express train</a> from Fiumicino Airport directly to Roma Termini.</p>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 1: Arrival & Ancient Engineering</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>2:00 PM:</strong> Arrive via train, check into our convent, and drop our bags!</li>
-                            <li><strong>4:00 PM:</strong> Head to the Pantheon. We'll marvel at the massive unreinforced concrete dome and oculus that have survived since ancient times.</li>
-                            <li><strong>6:30 PM:</strong> Cross the river for our Twilight Walking Food Tour in Trastevere.</li>
-                            <li><strong>9:30 PM:</strong> After the tour, let's grab an evening cocktail at <strong>Freni e Frizioni</strong>.</li>
-                        </ul>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 2: The Heart of the Ancient World</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>9:00 AM:</strong> Enter the Colosseum and Roman Forum. We'll walk the exact political and religious nucleus of the ancient world.</li>
-                            <li><strong>1:00 PM:</strong> Head to the bohemian Monti district for lunch and vintage shopping along Via del Boschetto.</li>
-                            <li><strong>3:30 PM:</strong> Explore the Capitoline Museums to see the famous bronze she-wolf.</li>
-                            <li><strong>8:00 PM:</strong> Dinner reservations at <strong>La Taverna dei Fori Imperiali</strong> for rich, classic Roman pasta and lamb.</li>
-                        </ul>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 3: The Papal Seat & The Baroque</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>8:00 AM:</strong> Vatican Museums Prime Experience. We'll beat the crowds to see Michelangelo's grueling, masterful Sistine Chapel frescoes.</li>
-                            <li><strong>1:00 PM:</strong> Lunch near the Prati neighborhood.</li>
-                            <li><strong>3:30 PM:</strong> Head to the Borghese Gallery to get up close to Bernini's impossibly soft marble sculptures.</li>
-                            <li><strong>9:00 PM:</strong> Walk to the Trevi Fountain after dark, grab a famous <em>Maritozzo</em> bun or gelato, and stroll through Campo de' Fiori!</li>
-                        </ul>
-                    </div>
-                </details>
-                <button class="next-btn" onclick="openCityCard('assisi', 43.0702, 12.6186)">Next Stop: Assisi ➔</button>
-            `,
-            'assisi': `
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Assisi_panorama.jpg/800px-Assisi_panorama.jpg" alt="Basilica in Assisi" class="modal-hero-img">
-                <h2>Day 4: Assisi</h2>
-                <div class="tag-container">
-                    <span class="tag water">🕊️ Spiritual Retreat</span>
-                    <span class="tag nature">🌲 Nature Trails</span>
-                </div>
-
-                <div class="why-block">
-                    <h3>💜 Why I chose this for us</h3>
-                    <p>[I will add my personal note here...]</p>
-                </div>
-                
-                <details open>
-                    <summary>Stay & Logistics</summary>
-                    <div class="details-content">
-                        <p><strong>Where:</strong> Monastero Sant'Andrea or Suore Francescane.</p>
-                        <p><strong>Transit:</strong> Take a morning <a href="https://www.trenitalia.com/en.html" target="_blank">regional train</a> from Roma Termini to Assisi.</p>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 4: Monastic Life & The Renaissance Spark</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>9:00 AM:</strong> Catch our regional train out of the bustling city and into the Umbrian countryside.</li>
-                            <li><strong>11:30 AM:</strong> Check into our peaceful hilltop monastery.</li>
-                            <li><strong>1:00 PM:</strong> Explore the Basilica of San Francesco to witness Giotto's groundbreaking, three-dimensional frescoes.</li>
-                            <li><strong>3:30 PM:</strong> Hike up Mount Subasio to the <em>Eremo delle Carceri</em>, a remote, forested network of caves where St. Francis prayed.</li>
-                            <li><strong>7:30 PM:</strong> Sit down for a quiet, romantic dinner at <strong>Trattoria Pallotta</strong> for wild boar ragù, black truffles, and Umbrian wine.</li>
-                        </ul>
-                    </div>
-                </details>
-                <button class="next-btn" onclick="openCityCard('florence', 43.7695, 11.2558)">Next Stop: Florence ➔</button>
-            `,
-            'florence': `
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Florence_italy_duomo.jpg/800px-Florence_italy_duomo.jpg" alt="Florence Duomo" class="modal-hero-img">
-                <h2>Days 5–7: Florence & Tuscany</h2>
-                <div class="tag-container">
-                    <span class="tag history">🎨 Renaissance Art</span>
-                    <span class="tag nature">🛵 Vespa Cruising</span>
-                </div>
-
-                <div class="why-block">
-                    <h3>💜 Why I chose this for us</h3>
-                    <p>[I will add my personal note here...]</p>
-                </div>
-                
-                <details open>
-                    <summary>Stay & Logistics</summary>
-                    <div class="details-content">
-                        <p><strong>Where:</strong> An Agriturismo like <em>Fattoria Il Milione</em> (just outside the city) or <em>Oblate Guest House</em> (central).</p>
-                        <p><strong>Transit:</strong> <a href="https://www.trenitalia.com/en.html" target="_blank">Regional train</a> from Assisi to Firenze Santa Maria Novella.</p>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 5: The Wealth of the Medici</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>10:00 AM:</strong> Catch our train from Assisi into the heart of Tuscany.</li>
-                            <li><strong>1:00 PM:</strong> Check into our rustic Agriturismo farm estate!</li>
-                            <li><strong>3:00 PM:</strong> Visit the Uffizi Gallery. We'll explore the administrative headquarters of the Medici family and see the birth of the Renaissance.</li>
-                            <li><strong>6:30 PM:</strong> Walk across the historic Ponte Vecchio right at sunset.</li>
-                            <li><strong>8:00 PM:</strong> Cross into the bohemian <em>Oltrarno</em> neighborhood for dinner and live music in Piazza Santo Spirito.</li>
-                        </ul>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 6: The Symbol of Defiance</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>9:00 AM:</strong> Enter the Accademia Gallery to stand beneath Michelangelo's towering <em>David</em>.</li>
-                            <li><strong>12:30 PM:</strong> Wait in line for Florence's most legendary street food: massive schiacciata sandwiches from <strong>All'Antico Vinaio</strong>.</li>
-                            <li><strong>2:30 PM:</strong> Take on the 463-step climb to the top of Brunelleschi's magnificent Duomo.</li>
-                            <li><strong>7:30 PM:</strong> Sit down for an incredibly traditional, carnivorous Tuscan dinner featuring Florentine steak and roasted pork.</li>
-                        </ul>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 7: The Historic Chianti Zone</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>9:00 AM - 4:00 PM:</strong> Head out for our guided vintage Fiat 500 or Vespa tour through the rolling Chianti hills, including a farmhouse lunch!</li>
-                            <li><strong>5:00 PM:</strong> Return to the city and visit the <strong>Scuola del Cuoio</strong> to watch artisans tool genuine leather jackets and bags.</li>
-                        </ul>
-                    </div>
-                </details>
-                <button class="next-btn" onclick="openCityCard('cinque', 44.1353, 9.6828)">Next Stop: Cinque Terre ➔</button>
-            `,
-            'cinque': `
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Manarola_-_Cinque_Terre_-_Italy.jpg/800px-Manarola_-_Cinque_Terre_-_Italy.jpg" alt="Cinque Terre Coast" class="modal-hero-img">
-                <h2>Days 8–10: Cinque Terre</h2>
-                <div class="tag-container">
-                    <span class="tag water">🌊 Coastal Vibes</span>
-                    <span class="tag nature">🥾 Epic Hiking</span>
-                </div>
-
-                <div class="why-block">
-                    <h3>💜 Why I chose this for us</h3>
-                    <p>[I will add my personal note here...]</p>
-                </div>
-                
-                <details open>
-                    <summary>Stay & Logistics</summary>
-                    <div class="details-content">
-                        <p><strong>Where:</strong> An Affittacamere (guesthouse) like <em>Affittacamere Anna</em> in Levanto.</p>
-                        <p><strong>Transit:</strong> <a href="https://www.trenitalia.com/en.html" target="_blank">Train</a> from Florence to La Spezia Centrale. Buy the <strong><a href="https://www.parconazionale5terre.it/page.php?id=157" target="_blank">"Cinque Terre Treno MS Card"</a></strong> at the station.</p>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 8: Coastal Isolation</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>10:00 AM:</strong> Take the coastal train from Florence up into the Ligurian mountains.</li>
-                            <li><strong>1:00 PM:</strong> Arrive and check into our authentic guesthouse in Levanto.</li>
-                            <li><strong>3:00 PM:</strong> Take the local train into Vernazza. We'll explore the narrow alleys and climb up to the pirate-defense Doria Castle ruins.</li>
-                            <li><strong>6:30 PM:</strong> Join the virtual queue for <strong>Nessun Dorma</strong> in Manarola. We'll watch the sun go down over the cliffs with a meat and cheese platter.</li>
-                        </ul>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 9: The Monumental Landscape</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>8:00 AM:</strong> Start early to hike the Sentiero Azzurro (Blue Trail) along the sea cliffs, walking past centuries of hand-carved agricultural terraces.</li>
-                            <li><strong>12:30 PM:</strong> Arrive in Monterosso. Time to cool off, shop for lemon soaps, and grab some Limoncello!</li>
-                            <li><strong>4:00 PM:</strong> Head to Riomaggiore for an afternoon snack: a paper cone filled with hot, fresh-fried calamari and shrimp from <strong>Il Pescato Cucinato</strong>.</li>
-                        </ul>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 10: Culinary Immersion</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>10:00 AM:</strong> Fresh Pasta and Focaccia class! We'll learn to hand-roll Ligurian <em>trofie</em> pasta.</li>
-                            <li><strong>2:30 PM:</strong> Rent a kayak in the afternoon to view the colorful, steep cliffside villages from the water—just like returning sailors used to do!</li>
-                        </ul>
-                    </div>
-                </details>
-                <button class="next-btn" onclick="openCityCard('venice', 45.4408, 12.3155)">Next Stop: Venice ➔</button>
-            `,
-            'venice': `
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Grand_Canal_Venice.jpg/800px-Grand_Canal_Venice.jpg" alt="Venice Grand Canal" class="modal-hero-img">
-                <h2>Days 11–14: Venice</h2>
-                <div class="tag-container">
-                    <span class="tag water">🛶 Romantic Canals</span>
-                    <span class="tag history">🎭 Secret History</span>
-                </div>
-
-                <div class="why-block">
-                    <h3>💜 Why I chose this for us</h3>
-                    <p>[I will add my personal note here...]</p>
-                </div>
-                
-                <details open>
-                    <summary>Stay & Logistics</summary>
-                    <div class="details-content">
-                        <p><strong>Where:</strong> <em>Foresteria Valdese</em> or <em>Istituto San Giuseppe</em>. Book directly 3 months ahead.</p>
-                        <p><strong>Transit:</strong> High-speed train from Cinque Terre to Venice Santa Lucia.</p>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 11: Across the North</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>11:00 AM:</strong> Hop on the high-speed train leaving the coast for the Venetian Lagoon.</li>
-                            <li><strong>3:30 PM:</strong> Step out of the station and immediately catch the Vaporetto (water bus) cruising down the majestic Grand Canal.</li>
-                            <li><strong>4:30 PM:</strong> Check into our historic palazzo guest house.</li>
-                            <li><strong>7:00 PM:</strong> Head out to Campo Santa Margherita to grab cheap spritzes and mingle with the university students and locals!</li>
-                        </ul>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 12: Secrets of the Republic & Casanova</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>9:30 AM:</strong> Doge’s Palace "Secret Itineraries" tour. We'll explore the hidden offices of the maritime empire and step inside Casanova's legendary prison cell.</li>
-                            <li><strong>1:00 PM:</strong> Grab a casual lunch away from St. Mark's Square.</li>
-                            <li><strong>6:00 PM:</strong> Time for our Cicchetti crawl! We'll start at <strong>Cantina Do Mori</strong> (est. 1462) for fresh seafood crostini, followed by sweet pastry <em>Fritole</em>.</li>
-                        </ul>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 13: The Artisan Monopolies</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>10:00 AM:</strong> Take the Vaporetto to Murano. We'll watch the master glassblowers whose secrets the Republic guarded with their lives!</li>
-                            <li><strong>2:00 PM:</strong> Head to Dorsoduro to visit <strong>Ca' Macana</strong> and see how authentic papier-mâché Venetian masks are crafted.</li>
-                            <li><strong>5:30 PM:</strong> Our final night! A romantic sunset gondola ride through the shallow, winding canals.</li>
-                        </ul>
-                    </div>
-                </details>
-                <details>
-                    <summary>Day 14: Departure</summary>
-                    <div class="details-content">
-                        <ul>
-                            <li><strong>9:00 AM:</strong> Grab a final Italian espresso, then take the Alilaguna water bus to Marco Polo Airport for our journey home!</li>
-                        </ul>
-                    </div>
-                </details>
-            `
-        };
 
         const latlngs = locations.map(loc => loc.coords);
         L.polyline(latlngs, { color: '#4A6B53', weight: 3, dashArray: '8, 8', opacity: 0.9 }).addTo(map);
 
+        // Function to generate the dynamic HTML based on the CYOA state!
+        function getItineraryHtml(cityId) {
+            if (cityId === 'rome') {
+                return `
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Colosseum_in_Rome-April_2007-1-_copie_2B.jpg/800px-Colosseum_in_Rome-April_2007-1-_copie_2B.jpg" alt="Colosseum in Rome" class="modal-hero-img">
+                    <h2>Days 1–3: Rome</h2>
+                    <div class="tag-container">
+                        <span class="tag history">🏛️ Ancient Wonders</span>
+                        <span class="tag history">🎨 Baroque Art</span>
+                    </div>
+                    
+                    <div class="why-block">
+                        <h3>💜 Why I chose this for us</h3>
+                        <p>[I will add my personal note here...]</p>
+                    </div>
+
+                    <details open>
+                        <summary>Day 1: Arrival & Trastevere</summary>
+                        <div class="details-content">
+                            <ul>
+                                <li><strong>2:00 PM:</strong> Arrive via train, check into our convent, and drop our bags!</li>
+                                <li><strong>4:00 PM:</strong> Head to the Pantheon. We'll marvel at the massive unreinforced concrete dome.</li>
+                                <li><strong>6:30 PM:</strong> Cross the river for our Twilight Walking Food Tour in Trastevere.</li>
+                                <li><strong>9:30 PM:</strong> After the tour, let's grab an evening cocktail at <strong>Freni e Frizioni</strong>.</li>
+                            </ul>
+                        </div>
+                    </details>
+                    
+                    <details open>
+                        <summary>Day 2: The Heart of the Ancient World</summary>
+                        <div class="details-content">
+                            <ul>
+                                <li><strong>9:00 AM:</strong> Enter the Colosseum and Roman Forum. We'll walk the exact political and religious nucleus of the ancient world.</li>
+                                <li><strong>1:00 PM:</strong> Head to the bohemian Monti district for lunch and vintage shopping along Via del Boschetto.</li>
+                                <li><strong>3:30 PM:</strong> Explore the Capitoline Museums to see the famous bronze she-wolf.</li>
+                                <li><strong>8:00 PM:</strong> Dinner reservations at <strong>La Taverna dei Fori Imperiali</strong> for rich, classic Roman pasta.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <div class="cyoa-container">
+                        <h4 class="cyoa-title">✨ Choose Your Adventure: Day 3 ✨</h4>
+                        <div class="cyoa-toggle">
+                            <button class="cyoa-btn ${adventureState.rome === 'A' ? 'active' : ''}" onclick="updateAdventure('rome', 'A')">Vatican & Art</button>
+                            <button class="cyoa-btn ${adventureState.rome === 'B' ? 'active' : ''}" onclick="updateAdventure('rome', 'B')">E-Bikes & Catacombs</button>
+                        </div>
+                        <div class="cyoa-content">
+                            ${adventureState.rome === 'A' ? `
+                                <ul>
+                                    <li><strong>8:00 AM:</strong> Vatican Museums Prime Experience. We'll beat the crowds to see Michelangelo's grueling, masterful Sistine Chapel frescoes.</li>
+                                    <li><strong>1:00 PM:</strong> Lunch near the Prati neighborhood.</li>
+                                    <li><strong>3:30 PM:</strong> Head to the Borghese Gallery to get up close to Bernini's impossibly soft marble sculptures.</li>
+                                    <li><strong>9:00 PM:</strong> Walk to the Trevi Fountain after dark, grab a famous <em>Maritozzo</em> sweet bun, and stroll through Campo de' Fiori!</li>
+                                </ul>
+                            ` : `
+                                <ul>
+                                    <li><strong>9:00 AM:</strong> Rent e-bikes and ride down the ancient 2,000-year-old cobblestones of the Via Appia Antica!</li>
+                                    <li><strong>11:30 AM:</strong> Park our bikes and head underground to explore the eerie Christian Catacombs.</li>
+                                    <li><strong>2:00 PM:</strong> Stop at a countryside osteria for a massive lunch featuring Rome's famous <em>Abbacchio al Forno</em> (roast lamb) and fresh artichokes.</li>
+                                    <li><strong>9:00 PM:</strong> Walk to the Trevi Fountain after dark, grab a famous <em>Maritozzo</em> sweet bun, and stroll through Campo de' Fiori!</li>
+                                </ul>
+                            `}
+                        </div>
+                    </div>
+
+                    <button class="next-btn" onclick="openCityCard('assisi', 43.0702, 12.6186)">Next Stop: Assisi ➔</button>
+                `;
+            }
+
+            if (cityId === 'assisi') {
+                return `
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Assisi_panorama.jpg/800px-Assisi_panorama.jpg" alt="Basilica in Assisi" class="modal-hero-img">
+                    <h2>Day 4: Assisi</h2>
+                    <div class="tag-container">
+                        <span class="tag water">🕊️ Spiritual Retreat</span>
+                        <span class="tag nature">🌲 Nature Trails</span>
+                    </div>
+
+                    <div class="why-block">
+                        <h3>💜 Why I chose this for us</h3>
+                        <p>[I will add my personal note here...]</p>
+                    </div>
+
+                    <details open>
+                        <summary>Day 4 Morning: Monastic Life</summary>
+                        <div class="details-content">
+                            <ul>
+                                <li><strong>9:00 AM:</strong> Catch our regional train out of the bustling city and into the Umbrian countryside.</li>
+                                <li><strong>11:30 AM:</strong> Check into our peaceful hilltop monastery.</li>
+                                <li><strong>1:00 PM:</strong> Explore the Basilica of San Francesco to witness Giotto's groundbreaking, three-dimensional frescoes.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <div class="cyoa-container">
+                        <h4 class="cyoa-title">✨ Choose Your Adventure: Afternoon ✨</h4>
+                        <div class="cyoa-toggle">
+                            <button class="cyoa-btn ${adventureState.assisi === 'A' ? 'active' : ''}" onclick="updateAdventure('assisi', 'A')">Spiritual Hike</button>
+                            <button class="cyoa-btn ${adventureState.assisi === 'B' ? 'active' : ''}" onclick="updateAdventure('assisi', 'B')">Truffle Hunting</button>
+                        </div>
+                        <div class="cyoa-content">
+                            ${adventureState.assisi === 'A' ? `
+                                <ul>
+                                    <li><strong>3:30 PM:</strong> Hike up Mount Subasio to the <em>Eremo delle Carceri</em>, a remote, forested network of caves where St. Francis prayed.</li>
+                                    <li><strong>7:30 PM:</strong> Sit down for a quiet, romantic dinner at <strong>Trattoria Pallotta</strong> for wild boar ragù, black truffles, and Umbrian wine.</li>
+                                </ul>
+                            ` : `
+                                <ul>
+                                    <li><strong>2:30 PM:</strong> Head into the Umbrian woods with a local <em>Tartufaio</em> and his specially trained dogs to hunt for fresh black truffles!</li>
+                                    <li><strong>5:30 PM:</strong> Enjoy the rewards of our hunt with a massive, rustic farmhouse meal featuring the truffles we found shaved over pasta, paired with an incredible spread of local cured pork sausages.</li>
+                                </ul>
+                            `}
+                        </div>
+                    </div>
+
+                    <button class="next-btn" onclick="openCityCard('florence', 43.7695, 11.2558)">Next Stop: Florence ➔</button>
+                `;
+            }
+
+            if (cityId === 'florence') {
+                return `
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Florence_italy_duomo.jpg/800px-Florence_italy_duomo.jpg" alt="Florence Duomo" class="modal-hero-img">
+                    <h2>Days 5–7: Florence & Tuscany</h2>
+                    <div class="tag-container">
+                        <span class="tag history">🎨 Renaissance Art</span>
+                        <span class="tag nature">🛵 Vespa Cruising</span>
+                    </div>
+
+                    <div class="why-block">
+                        <h3>💜 Why I chose this for us</h3>
+                        <p>[I will add my personal note here...]</p>
+                    </div>
+
+                    <details open>
+                        <summary>Day 5: The Wealth of the Medici</summary>
+                        <div class="details-content">
+                            <ul>
+                                <li><strong>10:00 AM:</strong> Catch our train from Assisi into the heart of Tuscany.</li>
+                                <li><strong>1:00 PM:</strong> Check into our rustic Agriturismo farm estate!</li>
+                                <li><strong>3:00 PM:</strong> Visit the Uffizi Gallery. We'll explore the administrative headquarters of the Medici family.</li>
+                                <li><strong>6:30 PM:</strong> Walk across the historic Ponte Vecchio right at sunset.</li>
+                            </ul>
+                        </div>
+                    </details>
+                    
+                    <details open>
+                        <summary>Day 6: The Symbol of Defiance</summary>
+                        <div class="details-content">
+                            <ul>
+                                <li><strong>9:00 AM:</strong> Enter the Accademia Gallery to stand beneath Michelangelo's towering <em>David</em>.</li>
+                                <li><strong>12:30 PM:</strong> Wait in line for Florence's most legendary street food: massive schiacciata pork sandwiches from <strong>All'Antico Vinaio</strong>.</li>
+                                <li><strong>2:30 PM:</strong> Take on the 463-step climb to the top of Brunelleschi's magnificent Duomo.</li>
+                                <li><strong>7:30 PM:</strong> Sit down for an incredibly traditional Tuscan dinner featuring herb-roasted pork (<em>Arista di Maiale</em>).</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <div class="cyoa-container">
+                        <h4 class="cyoa-title">✨ Choose Your Adventure: Day 7 ✨</h4>
+                        <div class="cyoa-toggle">
+                            <button class="cyoa-btn ${adventureState.florence === 'A' ? 'active' : ''}" onclick="updateAdventure('florence', 'A')">Chianti Vespa Tour</button>
+                            <button class="cyoa-btn ${adventureState.florence === 'B' ? 'active' : ''}" onclick="updateAdventure('florence', 'B')">Siena & Sweets</button>
+                        </div>
+                        <div class="cyoa-content">
+                            ${adventureState.florence === 'A' ? `
+                                <ul>
+                                    <li><strong>9:00 AM - 4:00 PM:</strong> Head out for our guided vintage Fiat 500 or Vespa tour through the rolling Chianti hills, including a farmhouse lunch!</li>
+                                    <li><strong>5:00 PM:</strong> Return to the city and visit the <strong>Scuola del Cuoio</strong> to watch artisans tool genuine leather jackets and bags.</li>
+                                </ul>
+                            ` : `
+                                <ul>
+                                    <li><strong>9:00 AM:</strong> Catch a luxury bus to the stunning medieval hilltop city of Siena.</li>
+                                    <li><strong>11:30 AM:</strong> Marvel at the magnificent striped Gothic Cathedral and the sweeping Piazza del Campo.</li>
+                                    <li><strong>2:00 PM:</strong> Stop at a historic bakery to indulge in <em>Panforte</em> and <em>Ricciarelli</em> (Siena's legendary, chewy almond sweet treats!).</li>
+                                    <li><strong>6:00 PM:</strong> Head back to Florence for a sunset aperitivo.</li>
+                                </ul>
+                            `}
+                        </div>
+                    </div>
+
+                    <button class="next-btn" onclick="openCityCard('cinque', 44.1353, 9.6828)">Next Stop: Cinque Terre ➔</button>
+                `;
+            }
+
+            if (cityId === 'cinque') {
+                return `
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Manarola_-_Cinque_Terre_-_Italy.jpg/800px-Manarola_-_Cinque_Terre_-_Italy.jpg" alt="Cinque Terre Coast" class="modal-hero-img">
+                    <h2>Days 8–10: Cinque Terre</h2>
+                    <div class="tag-container">
+                        <span class="tag water">🌊 Coastal Vibes</span>
+                        <span class="tag nature">🥾 Epic Hiking</span>
+                    </div>
+
+                    <div class="why-block">
+                        <h3>💜 Why I chose this for us</h3>
+                        <p>[I will add my personal note here...]</p>
+                    </div>
+
+                    <details open>
+                        <summary>Day 8: Coastal Isolation</summary>
+                        <div class="details-content">
+                            <ul>
+                                <li><strong>10:00 AM:</strong> Take the coastal train from Florence up into the Ligurian mountains.</li>
+                                <li><strong>1:00 PM:</strong> Arrive and check into our authentic guesthouse in Levanto.</li>
+                                <li><strong>3:00 PM:</strong> Take the local train into Vernazza. We'll explore the narrow alleys and climb up to the pirate-defense Doria Castle ruins.</li>
+                                <li><strong>6:30 PM:</strong> Join the virtual queue for <strong>Nessun Dorma</strong> in Manarola. We'll watch the sun go down over the cliffs with a meat and cheese platter.</li>
+                            </ul>
+                        </div>
+                    </details>
+                    
+                    <details open>
+                        <summary>Day 9: The Monumental Landscape</summary>
+                        <div class="details-content">
+                            <ul>
+                                <li><strong>8:00 AM:</strong> Start early to hike the Sentiero Azzurro (Blue Trail) along the sea cliffs, walking past centuries of hand-carved agricultural terraces.</li>
+                                <li><strong>12:30 PM:</strong> Arrive in Monterosso. Time to cool off, shop for lemon soaps, and grab some Limoncello!</li>
+                                <li><strong>4:00 PM:</strong> Head to Riomaggiore for an afternoon snack: a paper cone filled with hot, fresh-fried calamari and shrimp from <strong>Il Pescato Cucinato</strong>.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <div class="cyoa-container">
+                        <h4 class="cyoa-title">✨ Choose Your Adventure: Day 10 ✨</h4>
+                        <div class="cyoa-toggle">
+                            <button class="cyoa-btn ${adventureState.cinque === 'A' ? 'active' : ''}" onclick="updateAdventure('cinque', 'A')">Pasta Class & Kayak</button>
+                            <button class="cyoa-btn ${adventureState.cinque === 'B' ? 'active' : ''}" onclick="updateAdventure('cinque', 'B')">Private Boat Tour</button>
+                        </div>
+                        <div class="cyoa-content">
+                            ${adventureState.cinque === 'A' ? `
+                                <ul>
+                                    <li><strong>10:00 AM:</strong> Fresh Pasta and Focaccia class! We'll learn to hand-roll Ligurian <em>trofie</em> pasta.</li>
+                                    <li><strong>2:30 PM:</strong> Rent a kayak in the afternoon to view the colorful, steep cliffside villages from the water—just like returning sailors used to do!</li>
+                                </ul>
+                            ` : `
+                                <ul>
+                                    <li><strong>10:00 AM:</strong> Skip the crowds and board a private traditional wooden <em>gozzo</em> boat!</li>
+                                    <li><strong>1:00 PM:</strong> Sail down the rugged coast to the hidden gem of Portovenere, seeing the majestic cliffs from the sea.</li>
+                                    <li><strong>3:00 PM:</strong> Eat fresh, locally caught seafood right on the boat while swimming in hidden, crystal-clear coves.</li>
+                                </ul>
+                            `}
+                        </div>
+                    </div>
+
+                    <button class="next-btn" onclick="openCityCard('venice', 45.4408, 12.3155)">Next Stop: Venice ➔</button>
+                `;
+            }
+
+            if (cityId === 'venice') {
+                return `
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Grand_Canal_Venice.jpg/800px-Grand_Canal_Venice.jpg" alt="Venice Grand Canal" class="modal-hero-img">
+                    <h2>Days 11–14: Venice</h2>
+                    <div class="tag-container">
+                        <span class="tag water">🛶 Romantic Canals</span>
+                        <span class="tag history">🎭 Secret History</span>
+                    </div>
+
+                    <div class="why-block">
+                        <h3>💜 Why I chose this for us</h3>
+                        <p>[I will add my personal note here...]</p>
+                    </div>
+
+                    <details open>
+                        <summary>Day 11: Across the North</summary>
+                        <div class="details-content">
+                            <ul>
+                                <li><strong>11:00 AM:</strong> Hop on the high-speed train leaving the coast for the Venetian Lagoon.</li>
+                                <li><strong>3:30 PM:</strong> Step out of the station and immediately catch the Vaporetto (water bus) cruising down the majestic Grand Canal.</li>
+                                <li><strong>4:30 PM:</strong> Check into our historic palazzo guest house.</li>
+                                <li><strong>7:00 PM:</strong> Head out to Campo Santa Margherita to grab cheap spritzes and mingle with the university students and locals!</li>
+                            </ul>
+                        </div>
+                    </details>
+                    
+                    <details open>
+                        <summary>Day 12: Secrets of the Republic & Casanova</summary>
+                        <div class="details-content">
+                            <ul>
+                                <li><strong>9:30 AM:</strong> Doge’s Palace "Secret Itineraries" tour. We'll explore the hidden offices of the maritime empire and step inside Casanova's legendary prison cell.</li>
+                                <li><strong>1:00 PM:</strong> Grab a casual lunch away from St. Mark's Square.</li>
+                                <li><strong>6:00 PM:</strong> Time for our Cicchetti crawl! We'll start at <strong>Cantina Do Mori</strong> for fresh seafood crostini, followed by sweet pastry <em>Fritole</em> treats!</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <div class="cyoa-container">
+                        <h4 class="cyoa-title">✨ Choose Your Adventure: Day 13 ✨</h4>
+                        <div class="cyoa-toggle">
+                            <button class="cyoa-btn ${adventureState.venice === 'A' ? 'active' : ''}" onclick="updateAdventure('venice', 'A')">Glass & Mask Artisans</button>
+                            <button class="cyoa-btn ${adventureState.venice === 'B' ? 'active' : ''}" onclick="updateAdventure('venice', 'B')">Learn to Row</button>
+                        </div>
+                        <div class="cyoa-content">
+                            ${adventureState.venice === 'A' ? `
+                                <ul>
+                                    <li><strong>10:00 AM:</strong> Take the Vaporetto to Murano. We'll watch the master glassblowers whose secrets the Republic guarded with their lives!</li>
+                                    <li><strong>2:00 PM:</strong> Head to Dorsoduro to visit <strong>Ca' Macana</strong> and see how authentic papier-mâché Venetian masks are crafted.</li>
+                                    <li><strong>5:30 PM:</strong> Our final night! A romantic sunset gondola ride through the shallow, winding canals.</li>
+                                </ul>
+                            ` : `
+                                <ul>
+                                    <li><strong>10:00 AM:</strong> Skip the tourist lines and meet with a local Venetian maritime expert.</li>
+                                    <li><strong>11:30 AM:</strong> Step into a traditional wooden <em>Barchin</em> and actually learn to row like a gondolier (<em>Voga alla Veneta</em>) through the quiet canals!</li>
+                                    <li><strong>5:00 PM:</strong> Reward our hard physical work with a deep dive into Cannaregio's best bakeries for an absolute feast of sweet treats.</li>
+                                </ul>
+                            `}
+                        </div>
+                    </div>
+
+                    <details open>
+                        <summary>Day 14: Departure</summary>
+                        <div class="details-content">
+                            <ul>
+                                <li><strong>9:00 AM:</strong> Grab a final Italian espresso, then take the Alilaguna water bus to Marco Polo Airport for our journey home!</li>
+                            </ul>
+                        </div>
+                    </details>
+                `;
+            }
+        }
+
+        // Helper function for Tag UI mapping
         function getTagInfo(type) {
             switch(type) {
                 case 'food': return { class: 'food', text: 'Local Eats' };
@@ -758,7 +846,7 @@
             marker.bindTooltip(loc.name, { permanent: false, direction: 'top' });
             
             marker.on('click', () => {
-                document.getElementById('itineraryDetails').innerHTML = itineraryData[loc.id];
+                document.getElementById('itineraryDetails').innerHTML = getItineraryHtml(loc.id);
                 document.getElementById('modalOverlay').classList.add('active');
             });
         });
@@ -793,6 +881,24 @@
             });
         });
 
+        // --- CYOA Update Logic ---
+        window.updateAdventure = function(cityId, choice) {
+            // Update the state
+            adventureState[cityId] = choice;
+            
+            // Re-render the modal card
+            const detailsContainer = document.getElementById('itineraryDetails');
+            if (detailsContainer) {
+                detailsContainer.innerHTML = getItineraryHtml(cityId);
+            }
+            
+            // Force re-render the sidebar so it reflects the new choice
+            const sidebarContent = document.getElementById('sidebarContent');
+            if (sidebarContent.innerHTML.trim() !== '') {
+                populateSidebar(true);
+            }
+        };
+
         // --- Sidebar Functionality ---
         function toggleSidebar() {
             const sidebar = document.getElementById('itinerarySidebar');
@@ -800,21 +906,24 @@
                 sidebar.classList.remove('active');
             } else {
                 closeModal(); 
-                populateSidebar();
+                populateSidebar(false);
                 sidebar.classList.add('active');
             }
         }
 
-        function populateSidebar() {
+        function populateSidebar(forceRefresh) {
             const sidebarContent = document.getElementById('sidebarContent');
-            if (sidebarContent.children.length > 0) return; 
+            if (!forceRefresh && sidebarContent.children.length > 0) return; 
 
             let fullHtml = '';
             locations.forEach(loc => {
-                let htmlBlock = itineraryData[loc.id];
+                let htmlBlock = getItineraryHtml(loc.id);
                 
+                // Strip out buttons and images for a clean text timeline view
                 htmlBlock = htmlBlock.replace(/<button[^>]*next-btn[^>]*>[\s\S]*?<\/button>/g, '');
                 htmlBlock = htmlBlock.replace(/<img[^>]*modal-hero-img[^>]*>/g, '');
+                
+                // Keep details open in sidebar for easy scrolling
                 htmlBlock = htmlBlock.replace(/<details>/g, '<details open>');
 
                 fullHtml += `<div class="sidebar-section">${htmlBlock}</div>`;
@@ -844,7 +953,7 @@
             });
             
             setTimeout(() => {
-                document.getElementById('itineraryDetails').innerHTML = itineraryData[cityId];
+                document.getElementById('itineraryDetails').innerHTML = getItineraryHtml(cityId);
                 document.getElementById('modalOverlay').classList.add('active');
             }, 1000);
         }
