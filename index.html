@@ -135,6 +135,8 @@
             font-family: 'Playfair Display', serif;
             color: var(--accent-color);
             font-size: 1.8rem;
+            border: none;
+            padding: 0;
         }
 
         .sidebar-close {
@@ -414,9 +416,7 @@
             <h2>Timeline</h2>
             <button class="sidebar-close" onclick="toggleSidebar()">&times;</button>
         </div>
-        <div class="sidebar-content" id="sidebarContent">
-            <!-- This will be populated automatically by JavaScript -->
-        </div>
+        <div class="sidebar-content" id="sidebarContent"></div>
     </div>
 
     <!-- Birthday Welcome Modal -->
@@ -801,7 +801,7 @@
             if (sidebar.classList.contains('active')) {
                 sidebar.classList.remove('active');
             } else {
-                closeModal(); // Close map modals if open
+                closeModal(); 
                 populateSidebar();
                 sidebar.classList.add('active');
             }
@@ -809,15 +809,16 @@
 
         function populateSidebar() {
             const sidebarContent = document.getElementById('sidebarContent');
-            if (sidebarContent.innerHTML.trim() !== '') return; // Only populate once
+            // If the sidebar already has actual elements in it, do not rebuild it
+            if (sidebarContent.children.length > 0) return; 
 
             let fullHtml = '';
             locations.forEach(loc => {
                 let htmlBlock = itineraryData[loc.id];
                 
-                // Remove the "Next Stop" button and the Hero Image for a cleaner text view
-                htmlBlock = htmlBlock.replace(/<button class="next-btn"[\s\S]*?<\/button>/, '');
-                htmlBlock = htmlBlock.replace(/<img class="modal-hero-img"[\s\S]*?>/, '');
+                // Use robust regex to strip out buttons and images for a clean text timeline
+                htmlBlock = htmlBlock.replace(/<button[^>]*next-btn[^>]*>[\s\S]*?<\/button>/g, '');
+                htmlBlock = htmlBlock.replace(/<img[^>]*modal-hero-img[^>]*>/g, '');
                 
                 // Force all details to be open for easy scrolling
                 htmlBlock = htmlBlock.replace(/<details>/g, '<details open>');
