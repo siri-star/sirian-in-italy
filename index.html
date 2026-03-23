@@ -298,15 +298,17 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // Set map coordinates to beautifully frame Italy at zoom level 7
         const map = L.map('map').setView([43.0, 12.0], 7);
 
+        // Map Tile Layer
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap &copy; CARTO',
             subdomains: 'abcd',
             maxZoom: 20
         }).addTo(map);
 
-        // Main City Hubs
+        // 1. The Main City Hubs
         const locations = [
             { id: 'rome', step: 1, name: 'Start: Rome', coords: [41.9028, 12.4964] },
             { id: 'assisi', step: 2, name: 'Assisi', coords: [43.0702, 12.6186] },
@@ -315,27 +317,32 @@
             { id: 'venice', step: 5, name: 'End: Venice', coords: [45.4408, 12.3155] }
         ];
 
-        // Unique Food & Shopping Map Pins (With real-world offset coordinates so they cluster around the cities!)
+        // 2. The Interactive Food & Shopping Pins
         const extraLocations = [
             // Rome Extras
-            { id: 'taverna', type: 'food', emoji: '🍝', name: 'La Taverna dei Fori Imperiali', coords: [41.8943, 12.4891], desc: 'Let\'s book dinner here! We have to try the <em>Abbacchio al Forno</em> (classic Roman roast lamb) or the <em>Bucatini all\'Amatriciana</em> (a rich pasta made with crispy pork cheek).' },
-            { id: 'maritozzaro', type: 'food', emoji: '🥐', name: 'Il Maritozzaro', coords: [41.8814, 12.4646], desc: 'For a late-night sweet treat, we absolutely must try a <em>Maritozzo</em>—a classic Roman sweet bun split and filled to the brim with fresh whipped cream.' },
-            { id: 'boschetto', type: 'shop', emoji: '🛍️', name: 'Vintage Shopping on Via del Boschetto', coords: [41.8967, 12.4905], desc: 'Tucked right behind the Roman Forum, this street in the Monti neighborhood is famous for its independent artisan jewelry makers and vintage clothing boutiques.' },
+            { id: 'taverna', type: 'food', emoji: '🍝', name: 'La Taverna dei Fori Imperiali', coords: [41.8943, 12.4891], desc: "Let's book dinner here! We have to try the <em>Abbacchio al Forno</em> (classic Roman roast lamb) or the <em>Bucatini all'Amatriciana</em> (a rich pasta made with crispy pork cheek)." },
+            { id: 'maritozzaro', type: 'food', emoji: '🥐', name: 'Il Maritozzaro', coords: [41.8814, 12.4646], desc: "For a late-night sweet treat, we absolutely must try a <em>Maritozzo</em>—a classic Roman sweet bun split and filled to the brim with fresh whipped cream." },
+            { id: 'boschetto', type: 'shop', emoji: '🛍️', name: 'Vintage Shopping on Via del Boschetto', coords: [41.8967, 12.4905], desc: "Tucked right behind the Roman Forum, this street in the Monti neighborhood is famous for its independent artisan jewelry makers and vintage clothing boutiques." },
+            
             // Assisi Extras
-            { id: 'pallotta', type: 'food', emoji: '🍷', name: 'Trattoria Pallotta', coords: [43.0712, 12.6163], desc: 'A perfect quiet Umbrian dinner. Let\'s order the <em>Stringozzi</em> pasta with locally foraged black truffles and a rich wild boar (<em>cinghiale</em>) ragù, finished with <em>Rocciata</em> (apple/nut pastry)!' },
-            { id: 'ceramics', type: 'shop', emoji: '🏺', name: 'Deruta Ceramics', coords: [43.0720, 12.6150], desc: 'Assisi is surrounded by artisans making incredible hand-painted Deruta ceramics and olive wood carvings. A perfect spot for a unique souvenir.' },
+            { id: 'pallotta', type: 'food', emoji: '🍷', name: 'Trattoria Pallotta', coords: [43.0712, 12.6163], desc: "A perfect quiet Umbrian dinner. Let's order the <em>Stringozzi</em> pasta with locally foraged black truffles and a rich wild boar (<em>cinghiale</em>) ragù, finished with <em>Rocciata</em> (apple/nut pastry)!" },
+            { id: 'ceramics', type: 'shop', emoji: '🏺', name: 'Deruta Ceramics', coords: [43.0720, 12.6150], desc: "Assisi is surrounded by artisans making incredible hand-painted Deruta ceramics and olive wood carvings. A perfect spot for a unique souvenir." },
+            
             // Florence Extras
-            { id: 'vinaio', type: 'food', emoji: '🥪', name: 'All\'Antico Vinaio', coords: [43.7684, 11.2573], desc: 'We have to grab a massive <em>Sbriciolona</em> (fennel pork salami) schiacciata street sandwich here for lunch!' },
-            { id: 'cuoio', type: 'shop', emoji: '👜', name: 'Scuola del Cuoio (School of Leather)', coords: [43.7681, 11.2618], desc: 'Tucked inside the Santa Croce monastery, we can watch artisans hand-tooling genuine leather jackets and bags, and buy directly from the makers.' },
+            { id: 'vinaio', type: 'food', emoji: '🥪', name: "All'Antico Vinaio", coords: [43.7684, 11.2573], desc: "We have to grab a massive <em>Sbriciolona</em> (fennel pork salami) schiacciata street sandwich here for lunch!" },
+            { id: 'cuoio', type: 'shop', emoji: '👜', name: 'Scuola del Cuoio (School of Leather)', coords: [43.7681, 11.2618], desc: "Tucked inside the Santa Croce monastery, we can watch artisans hand-tooling genuine leather jackets and bags, and buy directly from the makers." },
+            
             // Cinque Terre Extras
-            { id: 'nessun', type: 'food', emoji: '🥂', name: 'Nessun Dorma', coords: [44.1065, 9.7275], desc: 'Located in Manarola, this is arguably the best sunset cocktail spot in Italy. We can sit on the cliff edge with an incredible cured pork and local cheese platter.' },
-            { id: 'pescato', type: 'food', emoji: '🍤', name: 'Il Pescato Cucinato', coords: [44.0984, 9.7394], desc: 'After hiking into Riomaggiore, let\'s grab a paper cone overflowing with hot, fresh-fried calamari, anchovies, and shrimp and sit by the harbor.' },
+            { id: 'nessun', type: 'food', emoji: '🥂', name: 'Nessun Dorma', coords: [44.1065, 9.7275], desc: "Located in Manarola, this is arguably the best sunset cocktail spot in Italy. We can sit on the cliff edge with an incredible cured pork and local cheese platter." },
+            { id: 'pescato', type: 'food', emoji: '🍤', name: 'Il Pescato Cucinato', coords: [44.0984, 9.7394], desc: "After hiking into Riomaggiore, let's grab a paper cone overflowing with hot, fresh-fried calamari, anchovies, and shrimp and sit by the harbor." },
+            
             // Venice Extras
-            { id: 'domori', type: 'food', emoji: '🍢', name: 'Cantina Do Mori', coords: [45.4388, 12.3338], desc: 'The oldest wine bar in Venice (est. 1462)! A perfect stop on our Cicchetti crawl to grab fresh seafood and prosciutto crostini with a €3 glass of house wine.' },
-            { id: 'macana', type: 'shop', emoji: '🎭', name: 'Ca\' Macana Mask Makers', coords: [45.4316, 12.3242], desc: 'They use traditional historic molds here to craft authentic Venetian papier-mâché masks (Stanley Kubrick even bought masks here for <em>Eyes Wide Shut</em>!).' }
+            { id: 'domori', type: 'food', emoji: '🍢', name: 'Cantina Do Mori', coords: [45.4388, 12.3338], desc: "The oldest wine bar in Venice (est. 1462)! A perfect stop on our Cicchetti crawl to grab fresh seafood and prosciutto crostini with a €3 glass of house wine." },
+            { id: 'macana', type: 'shop', emoji: '🎭', name: "Ca' Macana Mask Makers", coords: [45.4316, 12.3242], desc: "They use traditional historic molds here to craft authentic Venetian papier-mâché masks (Stanley Kubrick even bought masks here for <em>Eyes Wide Shut</em>!)." }
         ];
 
         // Draw dotted path connecting only the main cities
+        const latlngs = locations.map(loc => loc.coords);
         L.polyline(latlngs, { 
             color: '#4A6B53', 
             weight: 3, 
@@ -343,6 +350,7 @@
             opacity: 0.9 
         }).addTo(map);
 
+        // Big City Data
         const itineraryData = {
             'rome': `
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Colosseum_in_Rome-April_2007-1-_copie_2B.jpg/800px-Colosseum_in_Rome-April_2007-1-_copie_2B.jpg" alt="Colosseum in Rome" class="modal-hero-img">
@@ -367,8 +375,7 @@
                     <div class="details-content">
                         <ul>
                             <li><strong>Afternoon:</strong> The <a href="https://en.wikipedia.org/wiki/Pantheon,_Rome" target="_blank">Pantheon</a>. Commissioned by Marcus Agrippa and rebuilt by Emperor Hadrian, it remains the largest unreinforced concrete dome in the world—a testament to brilliant ancient Roman engineering that remained unmatched for over a millennium.</li>
-                            <li><strong>Evening:</strong> Twilight food walking tour in Trastevere. Historically the working-class district across the Tiber River, it retains its medieval labyrinthine charm and deep-rooted Roman culinary traditions.</li>
-                            <li><strong>Nightlife:</strong> After our tour, let's grab a cocktail at <strong>Freni e Frizioni</strong> (a cool bar in a former mechanic's shop).</li>
+                            <li><strong>Evening:</strong> Twilight walking tour in Trastevere. Historically the working-class district across the Tiber River, it retains its medieval labyrinthine charm.</li>
                         </ul>
                     </div>
                 </details>
@@ -379,7 +386,6 @@
                         <ul>
                             <li><strong>Morning:</strong> Colosseum, Roman Forum, and Palatine Hill. The Colosseum was the ultimate symbol of imperial power and pacification of the masses, while the Forum was the political, legal, and religious nucleus of the ancient world.</li>
                             <li><strong>Afternoon:</strong> <a href="https://www.museicapitolini.org/en" target="_blank">Capitoline Museums</a>. Considered the world's oldest public museum (established in 1471), it houses the <em>Lupa Capitolina</em>—the bronze she-wolf nursing Romulus and Remus.</li>
-                            <li><strong>Nightlife:</strong> Let's explore the Monti neighborhood behind the Forum for some great evening ambiance!</li>
                         </ul>
                     </div>
                 </details>
@@ -390,7 +396,7 @@
                         <ul>
                             <li><strong>Morning:</strong> Vatican Museums & Sistine Chapel. Michelangelo's ceiling wasn't just art; it was a grueling physical feat that visually articulated the entire biblical narrative for the Christian world.</li>
                             <li><strong>Afternoon:</strong> Borghese Gallery. Scipione Borghese was a ruthless cardinal whose immense patronage essentially bankrolled the Baroque era. Here we'll see Bernini's impossibly soft marbles.</li>
-                            <li><strong>Nightlife:</strong> Let's walk to the Trevi Fountain after dark. We can grab a late-night artisan gelato from the historic <strong>Giolitti</strong>, then stroll through the bustling, open-air nightlife of Campo de' Fiori.</li>
+                            <li><strong>Evening:</strong> Let's walk to the Trevi Fountain after dark!</li>
                         </ul>
                     </div>
                 </details>
@@ -419,7 +425,6 @@
                         <ul>
                             <li><strong>Afternoon:</strong> <a href="https://en.wikipedia.org/wiki/Basilica_of_Saint_Francis_of_Assisi" target="_blank">Basilica of San Francesco</a>. This UNESCO site houses revolutionary frescoes by Giotto and Cimabue. These specific artworks are the crucial "missing link" that transitioned flat, rigid Byzantine art into the emotional, three-dimensional realism that sparked the Renaissance.</li>
                             <li><strong>Late Afternoon:</strong> Hike Mount Subasio to the <em>Eremo delle Carceri</em>, the remote, forested network of caves where St. Francis and his followers retreated to pray in the 13th century.</li>
-                            <li><strong>Nightlife:</strong> We can stroll the intensely peaceful medieval streets. Let's grab a glass of Sagrantino wine and relax.</li>
                         </ul>
                     </div>
                 </details>
@@ -448,7 +453,6 @@
                         <ul>
                             <li><strong>Morning:</strong> Uffizi Gallery. "Uffizi" translates to "offices." This massive U-shaped building was originally the administrative headquarters for the <a href="https://en.wikipedia.org/wiki/House_of_Medici" target="_blank">Medici family</a>, whose staggering banking wealth and political maneuvering funded the artists who ignited the Renaissance.</li>
                             <li><strong>Afternoon:</strong> Walk across the <a href="https://en.wikipedia.org/wiki/Ponte_Vecchio" target="_blank">Ponte Vecchio</a> at sunset. It holds incredible history as it was the only bridge the retreating Germans didn't destroy in WWII.</li>
-                            <li><strong>Nightlife:</strong> At night, let's head to the Bohemian <em>Oltrarno</em> neighborhood to <strong>Piazza Santo Spirito</strong> for drinks and live music.</li>
                         </ul>
                     </div>
                 </details>
@@ -459,7 +463,6 @@
                         <ul>
                             <li><strong>Morning:</strong> Accademia Gallery. Michelangelo's <em>David</em> was not just a religious statue; it was commissioned as a political symbol of Florentine civil liberties and the Republic's defiance against the powerful, exiled Medici family.</li>
                             <li><strong>Afternoon:</strong> Florence Duomo. Filippo Brunelleschi's double-shell dome was an architectural miracle that effectively kicked off the Renaissance building boom.</li>
-                            <li><strong>Nightlife:</strong> For a classic Tuscan sweet treat after exploring, let's order Cantucci dipped in sweet Vin Santo dessert wine!</li>
                         </ul>
                     </div>
                 </details>
@@ -497,7 +500,6 @@
                         <ul>
                             <li><strong>Afternoon:</strong> Head to Vernazza. These five villages date back to the 11th century. For hundreds of years, they were entirely isolated by the steep mountains, accessible only by sea or treacherous mule paths, which birthed their fiercely independent, distinct local cultures.</li>
                             <li><strong>Evening:</strong> Walk up the trail toward Monterosso to view the Doria Castle ruins (built historically to protect the isolated villages from pirate raids).</li>
-                            <li><strong>Nightlife:</strong> The villages quiet down beautifully at night, perfect for a peaceful sunset stroll along the cliffs.</li>
                         </ul>
                     </div>
                 </details>
@@ -507,7 +509,6 @@
                     <div class="details-content">
                         <ul>
                             <li><strong>All Day:</strong> Hike the <a href="https://en.wikipedia.org/wiki/Sentiero_Azzurro" target="_blank">Sentiero Azzurro (Blue Trail)</a>. As we hike, we'll observe the dry-stone walls holding up the terraces. Over centuries, local farmers literally carved the mountainside by hand to cultivate grapes and olives—a monumental human effort.</li>
-                            <li><strong>Nightlife:</strong> After our hike, let's grab a scoop of fresh lemon basil gelato and sit by the harbor!</li>
                         </ul>
                     </div>
                 </details>
@@ -545,7 +546,7 @@
                     <div class="details-content">
                         <ul>
                             <li><strong>Afternoon:</strong> Arrive at the station and take the Vaporetto (water bus) down the Grand Canal to our lodging, witnessing the decaying, sinking grandeur of the Venetian palazzos.</li>
-                            <li><strong>Nightlife:</strong> Let's head to <strong>Campo Santa Margherita</strong>. This massive square in Dorsoduro is where actual Venetians and university students hang out. It’s packed with bars, affordable spritzes, and a great, lively atmosphere until the early hours.</li>
+                            <li><strong>Evening:</strong> Let's head to <strong>Campo Santa Margherita</strong>. This massive square in Dorsoduro is where actual Venetians and university students hang out. It’s packed with bars, affordable spritzes, and a great, lively atmosphere until the early hours.</li>
                         </ul>
                     </div>
                 </details>
@@ -555,7 +556,7 @@
                     <div class="details-content">
                         <ul>
                             <li><strong>Morning:</strong> Doge’s Palace. For a thousand years, the Venetian Republic (La Serenissima) was a ridiculously wealthy, independent maritime empire. We'll take the "Secret Itineraries" tour into the hidden offices and the lead-roofed prison cells—including the exact cell where <a href="https://en.wikipedia.org/wiki/Giacomo_Casanova" target="_blank">Giacomo Casanova</a> executed his legendary escape in 1756.</li>
-                            <li><strong>Nightlife:</strong> Time for our Cicchetti crawl! We need to find a bakery selling Venetian <em>Fritole</em> (sweet pastry fritters) or fresh Tiramisu!</li>
+                            <li><strong>Evening:</strong> Time for our Cicchetti crawl! This Venetian tapas tradition evolved from merchants needing quick bites of seafood and wine while doing business around the Rialto markets.</li>
                         </ul>
                     </div>
                 </details>
@@ -565,7 +566,7 @@
                     <div class="details-content">
                         <ul>
                             <li><strong>Morning:</strong> 24-hour Vaporetto pass to Murano and Burano. In 1291, the Republic forced all glassmakers to move to Murano. The official reason was to prevent fires, but the real reason was to isolate the artisans and violently guard the lucrative secrets of clear glassmaking from the rest of the world.</li>
-                            <li><strong>Evening:</strong> Let's take our sunset gondola ride! The asymmetric shape of the gondola and the single oar evolved specifically to navigate the shallow, narrow, and winding canals of the lagoon.</li>
+                            <li><strong>Evening:</strong> Sunset gondola ride. The asymmetric shape of the gondola and the single oar evolved specifically to navigate the shallow, narrow, and winding canals of the lagoon.</li>
                         </ul>
                     </div>
                 </details>
@@ -581,7 +582,7 @@
             `
         };
 
-        // Render numbered Main City markers
+        // Render the Main City numbered markers
         locations.forEach(loc => {
             const numberedIcon = L.divIcon({ 
                 className: 'custom-pin', 
@@ -599,7 +600,7 @@
             });
         });
 
-        // Render Food & Shop markers
+        // Render the Food & Shopping extra markers
         extraLocations.forEach(loc => {
             const iconClass = loc.type === 'food' ? 'food-pin' : 'shop-pin';
             const extraIcon = L.divIcon({
@@ -612,7 +613,6 @@
             const marker = L.marker(loc.coords, { icon: extraIcon }).addTo(map);
             marker.bindTooltip(loc.name, { permanent: false, direction: 'top' });
             
-            // Build the modal HTML for the extra pins
             const popupHtml = `
                 <h2>${loc.name}</h2>
                 <div class="tag-container">
@@ -629,6 +629,7 @@
             });
         });
 
+        // Close Modal Logic
         function closeModal() { 
             document.getElementById('modalOverlay').classList.remove('active'); 
         }
