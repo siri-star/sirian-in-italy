@@ -22,7 +22,6 @@
             --text-light: #666666;
             --card-bg: #FFFFFF;
             --border-light: #EBE6DE;
-            --route-color: #4A6B53; 
         }
 
         body {
@@ -51,14 +50,12 @@
             color: var(--accent-color);
             margin: 0;
             font-size: 2.4rem;
-            letter-spacing: 0.5px;
         }
 
         p.subtitle {
             margin: 8px 0 0 0;
             color: var(--text-light);
             font-size: 1.1rem;
-            font-weight: 400;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
@@ -84,26 +81,23 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.25);
             cursor: pointer;
             z-index: 1000;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            transition: all 0.3s;
         }
 
         .fab-btn:hover {
             background-color: var(--accent-hover);
             transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 8px 20px rgba(200,76,53,0.4);
         }
 
+        /* Sidebar Styling */
         .sidebar {
             position: fixed;
             top: 0;
             right: -100%;
             width: 100%;
-            max-width: 450px;
+            max-width: 550px; /* Made slightly wider for easier reading */
             height: 100vh;
-            background-color: var(--primary-bg);
+            background-color: #FFFFFF; /* Clean white background for copy-pasting */
             box-shadow: -5px 0 25px rgba(0,0,0,0.2);
             z-index: 2500;
             transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -115,25 +109,11 @@
 
         .sidebar-header {
             padding: 25px 30px 15px 30px;
-            background-color: transparent;
+            background-color: #FAFAFA;
+            border-bottom: 1px solid var(--border-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .timeline-bubble {
-            background-color: var(--accent-color);
-            color: white;
-            border-radius: 30px;
-            padding: 10px 24px;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .sidebar-close {
@@ -146,32 +126,21 @@
             align-items: center;
             justify-content: center;
             font-size: 22px;
-            color: var(--text-main);
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .sidebar-close:hover {
-            background: var(--accent-color);
-            color: white;
-            transform: scale(1.1);
-        }
+        .sidebar-close:hover { background: var(--accent-color); color: white; }
 
         .sidebar-content {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 30px;
+            padding: 40px;
             padding-bottom: 100px;
+            user-select: all; /* Ensures easy highlighting */
         }
 
-        .sidebar-content .sidebar-section {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        }
-
+        /* Modal & UI Styling */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -219,194 +188,81 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
             color: white;
             cursor: pointer;
-            transition: all 0.2s;
             z-index: 10;
         }
 
-        .close-btn:hover { background: var(--accent-color); transform: scale(1.05); }
-
-        .modal-hero-img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        /* CYOA Styles */
-        .cyoa-container {
-            margin: 15px 0;
-            padding: 20px;
-            background: #FAFAFA;
-            border-radius: 12px;
-            border: 2px dashed #EBE6DE;
-        }
-
-        .cyoa-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            color: var(--accent-color);
-            margin-top: 0;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .cyoa-toggle {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .cyoa-btn {
-            flex: 1;
-            padding: 10px 5px;
-            border: 2px solid var(--accent-color);
-            background: transparent;
-            color: var(--accent-color);
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.9rem;
-        }
-
-        .cyoa-btn.active {
-            background: var(--accent-color);
-            color: white;
-            box-shadow: 0 4px 10px rgba(200, 76, 53, 0.2);
-        }
-
-        .cyoa-btn:hover:not(.active) {
-            background: rgba(200, 76, 53, 0.05);
-        }
-
-        .cyoa-content {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--border-light);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .cyoa-content ul { margin: 0; padding-left: 20px; }
-        .cyoa-content li { margin-bottom: 8px; }
-
+        .close-btn:hover { background: var(--accent-color); }
+        .modal-hero-img { width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 25px; }
+        
         .why-block {
-            background: #F4E8EA;
-            border-left: 4px solid #722F37;
-            padding: 18px 20px;
-            margin: 25px 0;
-            border-radius: 0 8px 8px 0;
-            text-align: left;
+            background: #F4E8EA; border-left: 4px solid #722F37; padding: 18px 20px; margin: 25px 0; border-radius: 0 8px 8px 0; text-align: left;
         }
-
         .why-block h3 { margin-top: 0; color: #722F37; font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 8px; }
-        .why-block p { margin: 0; color: var(--text-main); font-style: italic; }
+        .why-block p { margin: 0; font-style: italic; }
 
         .next-btn {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 16px 24px;
-            font-size: 1.1rem;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: background 0.3s, transform 0.2s;
-            width: 100%;
-            display: block;
+            background-color: var(--accent-color); color: white; border: none; padding: 16px 24px; font-size: 1.1rem; font-weight: 700; border-radius: 8px; cursor: pointer; margin-top: 15px; width: 100%;
         }
 
-        .next-btn:hover { background-color: var(--accent-hover); transform: translateY(-2px); }
-
-        details {
-            margin-bottom: 12px;
-            background: #FFFFFF;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--border-light);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            text-align: left;
-        }
-
-        summary {
-            padding: 18px 20px;
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-            font-size: 1.2rem;
-            color: var(--text-main);
-            cursor: pointer;
-            list-style: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
+        details { background: #FFFFFF; border-radius: 8px; border: 1px solid var(--border-light); margin-bottom: 12px; }
+        summary { padding: 18px 20px; font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.2rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; }
         summary::-webkit-details-marker { display: none; }
-        summary:after { content: "+"; font-family: 'Nunito', sans-serif; font-size: 1.5rem; color: var(--accent-color); transition: transform 0.3s; }
+        summary:after { content: "+"; color: var(--accent-color); }
         details[open] summary:after { transform: rotate(45deg); }
         details[open] summary { background: var(--primary-bg); border-bottom: 1px solid var(--border-light); }
-        .details-content { padding: 20px; font-size: 1rem; line-height: 1.6; color: var(--text-light); text-align: left; }
+        .details-content { padding: 20px; font-size: 1rem; line-height: 1.6; }
 
-        h2 {
-            font-family: 'Playfair Display', serif;
-            color: var(--accent-color);
-            border-bottom: 2px solid var(--border-light);
-            padding-bottom: 12px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 2rem;
-        }
-
-        .tag-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; justify-content: flex-start; }
-        .tag { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-        
+        h2 { font-family: 'Playfair Display', serif; color: var(--accent-color); border-bottom: 2px solid var(--border-light); padding-bottom: 12px; margin-top: 0; margin-bottom: 20px; font-size: 2rem; }
+        .tag-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
+        .tag { display: inline-flex; padding: 6px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; }
         .tag.history { background: #F4E8EA; color: #722F37; } 
         .tag.food { background: #FCEEEB; color: #D34E24; } 
         .tag.nature { background: #EAF1EB; color: #4A6B53; } 
         .tag.water { background: #E6F0F5; color: #205E7D; } 
         .tag.stay { background: #FDF6E3; color: #B8860B; } 
 
-        a { color: var(--accent-color); text-decoration: none; font-weight: 700; border-bottom: 1px solid transparent; transition: all 0.2s; }
-        a:hover { color: var(--accent-hover); border-bottom: 1px solid var(--accent-hover); }
+        a { color: var(--accent-color); text-decoration: none; font-weight: 700; }
         ul { padding-left: 20px; margin-top: 5px; }
         li { margin-bottom: 12px; }
 
-        /* Map Pins */
-        .custom-pin {
-            background-color: var(--accent-color);
-            border: 2px solid white;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-family: 'Playfair Display', serif;
-            font-size: 16px;
-            font-weight: 700;
+        /* CYOA & Shimmer Styles */
+        .cyoa-container { margin: 15px 0; padding: 20px; background: #FAFAFA; border-radius: 12px; border: 2px dashed #EBE6DE; }
+        .cyoa-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--accent-color); margin-top: 0; margin-bottom: 15px; text-align: center; }
+        .cyoa-toggle { display: flex; gap: 10px; margin-bottom: 15px; }
+        .cyoa-btn { flex: 1; padding: 10px 5px; border: 2px solid var(--accent-color); background: transparent; color: var(--accent-color); border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .cyoa-btn.active { background: var(--accent-color); color: white; }
+        .cyoa-content { background: white; padding: 15px; border-radius: 8px; border: 1px solid var(--border-light); min-height: 100px; }
+        
+        .shimmer-block {
+            padding: 10px 0;
+        }
+        .shimmer-line {
+            height: 12px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            background: #f6f7f8;
+            background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+            background-repeat: no-repeat;
+            background-size: 800px 100%;
+            animation: placeholderShimmer 1.5s linear infinite forwards;
+        }
+        .shimmer-line.w-90 { width: 90%; }
+        .shimmer-line.w-75 { width: 75%; }
+        .shimmer-line.w-50 { width: 50%; }
+
+        @keyframes placeholderShimmer {
+            0% { background-position: -468px 0; }
+            100% { background-position: 468px 0; }
         }
 
-        .custom-pin:hover { transform: scale(1.15) translateY(-5px); background-color: var(--accent-hover); box-shadow: 0 6px 15px rgba(200,76,53,0.4); }
-        .food-pin { background-color: var(--food-color); border-color: #FCEEEB; font-size: 14px; }
-        .food-pin:hover { background-color: #BA421D; }
-        .shop-pin { background-color: var(--shop-color); border-color: #E6F0F5; font-size: 14px; }
-        .shop-pin:hover { background-color: #174861; }
-        .stay-pin { background-color: var(--stay-color); border-color: #FDF6E3; font-size: 14px; }
-        .stay-pin:hover { background-color: #8B6508; }
-        .sight-pin { background-color: var(--sight-color); border-color: #F4E8EA; font-size: 14px; }
-        .sight-pin:hover { background-color: #4A1A24; }
-        .nature-pin { background-color: var(--nature-color); border-color: #EAF1EB; font-size: 14px; }
-        .nature-pin:hover { background-color: #2F4535; }
+        /* Map Pins */
+        .custom-pin { background-color: var(--accent-color); border: 2px solid white; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-weight: 700; }
+        .food-pin { background-color: var(--food-color); font-size: 14px; }
+        .shop-pin { background-color: var(--shop-color); font-size: 14px; }
+        .stay-pin { background-color: var(--stay-color); font-size: 14px; }
+        .sight-pin { background-color: var(--sight-color); font-size: 14px; }
     </style>
 </head>
 <body>
@@ -422,13 +278,13 @@
 
     <div class="sidebar" id="itinerarySidebar">
         <div class="sidebar-header">
-            <div class="timeline-bubble">📜 Timeline</div>
+            <span style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--accent-color);">Itinerary Document</span>
             <button class="sidebar-close" onclick="toggleSidebar()">&times;</button>
         </div>
+        <!-- This container holds pure text/HTML designed perfectly for copy-pasting -->
         <div class="sidebar-content" id="sidebarContent"></div>
     </div>
 
-    <!-- Birthday Welcome Modal -->
     <div class="modal-overlay active" id="welcomeOverlay">
         <div class="modal-content">
             <h2 style="border: none; margin-bottom: 10px;">Happy 25th Birthday, Damian!! 💜</h2>
@@ -439,7 +295,6 @@
         </div>
     </div>
 
-    <!-- Main Itinerary Modal -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal()">&times;</button>
@@ -450,23 +305,19 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         const map = L.map('map').setView([43.0, 12.0], 7);
-
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap &copy; CARTO',
-            subdomains: 'abcd',
-            maxZoom: 20
+            attribution: '&copy; OpenStreetMap', subdomains: 'abcd', maxZoom: 20
         }).addTo(map);
 
-        // State object to track CYOA choices
+        // State object defaults to null so the shimmers show until picked!
         const adventureState = {
-            rome: 'A',
-            assisi: 'A',
-            florence: 'A',
-            cinque: 'A',
-            venice: 'A'
+            rome: null,
+            assisi: null,
+            florence: null,
+            cinque: null,
+            venice: null
         };
 
-        // Main City Hubs
         const locations = [
             { id: 'rome', step: 1, name: 'Start: Rome', coords: [41.9028, 12.4964] },
             { id: 'assisi', step: 2, name: 'Assisi', coords: [43.0702, 12.6186] },
@@ -475,69 +326,51 @@
             { id: 'venice', step: 5, name: 'End: Venice', coords: [45.4408, 12.3155] }
         ];
 
-        // Extra Locations
         const extraLocations = [
-            { id: 'rome-stay', type: 'stay', emoji: '🛏️', name: 'Casa di Santa Brigida', coords: [41.8955, 12.4711], desc: "Located off Piazza Farnese, this traditional convent stay run by the Birgittine Sisters offers a tranquil, historic base right in the heart of the city." },
-            { id: 'colosseum', type: 'sight', emoji: '⚔️', name: 'Colosseum & Roman Forum', coords: [41.8902, 12.4922], desc: "The Flavian Amphitheatre (completed in 80 AD) once held 50,000 spectators for gladiatorial contests. Adjacent lies the Forum, the excavated heart of ancient Roman politics and commerce." },
-            { id: 'taverna', type: 'food', emoji: '🍝', name: 'La Taverna dei Fori Imperiali', coords: [41.8943, 12.4891], desc: "A renowned, family-run restaurant on Via della Madonna dei Monti serving classic Roman dishes like <em>Abbacchio al Forno</em> (roast lamb) and crispy <em>Cacio e Pepe</em>." },
-            { id: 'maritozzaro', type: 'food', emoji: '🥐', name: 'Il Maritozzaro', coords: [41.8814, 12.4646], desc: "A legendary 1960s café famous across Rome for serving the ultimate <em>Maritozzo</em>—a sweet brioche-like bun overflowing with freshly whipped panna." },
-            
-            { id: 'assisi-stay', type: 'stay', emoji: '🛏️', name: 'Monastero Sant\'Andrea', coords: [43.0715, 12.6135], desc: "Run by Franciscan sisters, this medieval stone monastery offers panoramic views of the Umbrian valley and a profoundly quiet, spiritual atmosphere." },
-            { id: 'pallotta', type: 'food', emoji: '🍷', name: 'Trattoria Pallotta', coords: [43.0712, 12.6163], desc: "Situated in Piazza del Comune under historic stone vaults, this trattoria specializes in Umbrian <em>Stringozzi</em> pasta, black truffles, and rich wild boar ragù." },
-            
-            { id: 'florence-stay', type: 'stay', emoji: '🛏️', name: 'Fattoria Il Milione', coords: [43.7380, 11.2185], desc: "A stunning 15th-century estate set on 50 hectares of parkland in the Chianti hills, acting as an authentic Agriturismo base just outside the bustling city." },
-            { id: 'vinaio', type: 'food', emoji: '🥪', name: "All'Antico Vinaio", coords: [43.7684, 11.2573], desc: "Located on Via dei Neri, this is Italy's most famous street food spot, serving massive, freshly baked schiacciata bread overflowing with Tuscan meats and truffle creams." },
-            
-            { id: 'cinque-stay', type: 'stay', emoji: '🛏️', name: 'Affittacamere Anna', coords: [44.1705, 9.6148], desc: "A comfortable, locally-run guesthouse basecamp in Levanto, providing a quiet escape from the heavily trafficked five main villages." },
-            { id: 'nessun', type: 'food', emoji: '🥂', name: 'Nessun Dorma', coords: [44.1065, 9.7275], desc: "A world-famous Manarola cliffside terrace focusing entirely on local bruschetta, meat platters, and pesto making." },
-            
-            { id: 'venice-stay', type: 'stay', emoji: '🛏️', name: 'Foresteria Valdese', coords: [45.4374, 12.3392], desc: "Located in the Castello district inside the historic Palazzo Cavagnis. Rooms feature 16th-century frescoes, and proceeds support Waldensian charities." },
-            { id: 'domori', type: 'food', emoji: '🍢', name: 'Cantina Do Mori', coords: [45.4388, 12.3338], desc: "Tucked into San Polo 429 beneath hanging copper pots, this is rumored to have been Casanova's watering hole. A mandatory stop for <em>cicchetti</em> (Venetian tapas)." }
+            { id: 'rome-stay', type: 'stay', emoji: '🛏️', name: 'Casa di Santa Brigida', coords: [41.8955, 12.4711], desc: "Traditional convent stay offering private rooms right in the historic center." },
+            { id: 'colosseum', type: 'sight', emoji: '⚔️', name: 'Colosseum', coords: [41.8902, 12.4922], desc: "The ultimate symbol of imperial power and the ancient world." },
+            { id: 'taverna', type: 'food', emoji: '🍝', name: 'La Taverna dei Fori Imperiali', coords: [41.8943, 12.4891], desc: "Renowned family-run restaurant serving classic Roman dishes like Abbacchio al Forno." },
+            { id: 'maritozzaro', type: 'food', emoji: '🥐', name: 'Il Maritozzaro', coords: [41.8814, 12.4646], desc: "Famous for serving the ultimate Maritozzo sweet bun." },
+            { id: 'assisi-stay', type: 'stay', emoji: '🛏️', name: 'Monastero Sant\'Andrea', coords: [43.0715, 12.6135], desc: "Medieval stone monastery offering panoramic views of the Umbrian valley." },
+            { id: 'pallotta', type: 'food', emoji: '🍷', name: 'Trattoria Pallotta', coords: [43.0712, 12.6163], desc: "Trattoria specializing in Umbrian Stringozzi pasta and black truffles." },
+            { id: 'florence-stay', type: 'stay', emoji: '🛏️', name: 'Fattoria Il Milione', coords: [43.7380, 11.2185], desc: "A stunning 15th-century estate set on 50 hectares of parkland in the Chianti hills." },
+            { id: 'vinaio', type: 'food', emoji: '🥪', name: "All'Antico Vinaio", coords: [43.7684, 11.2573], desc: "Italy's most famous street food spot for massive schiacciata bread sandwiches." },
+            { id: 'cinque-stay', type: 'stay', emoji: '🛏️', name: 'Affittacamere Anna', coords: [44.1705, 9.6148], desc: "Comfortable, locally-run guesthouse basecamp in Levanto." },
+            { id: 'nessun', type: 'food', emoji: '🥂', name: 'Nessun Dorma', coords: [44.1065, 9.7275], desc: "World-famous Manarola cliffside terrace focusing on bruschetta and meat platters." },
+            { id: 'venice-stay', type: 'stay', emoji: '🛏️', name: 'Foresteria Valdese', coords: [45.4374, 12.3392], desc: "Historic religious guest house located in the quiet Castello district." },
+            { id: 'domori', type: 'food', emoji: '🍢', name: 'Cantina Do Mori', coords: [45.4388, 12.3338], desc: "The oldest wine bar in Venice (est. 1462). A mandatory stop for cicchetti." }
         ];
 
         const latlngs = locations.map(loc => loc.coords);
-        L.polyline(latlngs, { color: '#4A6B53', weight: 3, dashArray: '8, 8', opacity: 0.9 }).addTo(map);
+        L.polyline(latlngs, { color: '#4A6B53', weight: 3, dashArray: '8, 8' }).addTo(map);
 
-        // Function to generate the dynamic HTML based on the CYOA state!
+        // Generates the Shimmer effect block
+        function getShimmerBlock() {
+            return `
+                <div class="shimmer-block">
+                    <div class="shimmer-line w-90"></div>
+                    <div class="shimmer-line w-75"></div>
+                    <div class="shimmer-line w-90"></div>
+                    <div class="shimmer-line w-50"></div>
+                </div>
+            `;
+        }
+
         function getItineraryHtml(cityId) {
             if (cityId === 'rome') {
                 return `
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Colosseum_in_Rome-April_2007-1-_copie_2B.jpg/800px-Colosseum_in_Rome-April_2007-1-_copie_2B.jpg" alt="Colosseum in Rome" class="modal-hero-img">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Colosseum_in_Rome-April_2007-1-_copie_2B.jpg/800px-Colosseum_in_Rome-April_2007-1-_copie_2B.jpg" class="modal-hero-img">
                     <h2>Days 1–3: Rome</h2>
-                    <div class="tag-container">
-                        <span class="tag history">🏛️ Ancient Wonders</span>
-                        <span class="tag history">🎨 Baroque Art</span>
-                    </div>
-                    
-                    <div class="why-block">
-                        <h3>💜 Why I chose this for us</h3>
-                        <p>[I will add my personal note here...]</p>
-                    </div>
-
-                    <details open>
-                        <summary>Day 1: Arrival & Trastevere</summary>
-                        <div class="details-content">
-                            <ul>
-                                <li><strong>2:00 PM:</strong> Arrive via train, check into our convent, and drop our bags!</li>
-                                <li><strong>4:00 PM:</strong> Head to the Pantheon. We'll marvel at the massive unreinforced concrete dome.</li>
-                                <li><strong>6:30 PM:</strong> Cross the river for our Twilight Walking Food Tour in Trastevere.</li>
-                                <li><strong>9:30 PM:</strong> After the tour, let's grab an evening cocktail at <strong>Freni e Frizioni</strong>.</li>
-                            </ul>
-                        </div>
-                    </details>
-                    
-                    <details open>
-                        <summary>Day 2: The Heart of the Ancient World</summary>
-                        <div class="details-content">
-                            <ul>
-                                <li><strong>9:00 AM:</strong> Enter the Colosseum and Roman Forum. We'll walk the exact political and religious nucleus of the ancient world.</li>
-                                <li><strong>1:00 PM:</strong> Head to the bohemian Monti district for lunch and vintage shopping along Via del Boschetto.</li>
-                                <li><strong>3:30 PM:</strong> Explore the Capitoline Museums to see the famous bronze she-wolf.</li>
-                                <li><strong>8:00 PM:</strong> Dinner reservations at <strong>La Taverna dei Fori Imperiali</strong> for rich, classic Roman pasta.</li>
-                            </ul>
-                        </div>
-                    </details>
-
+                    <div class="why-block"><h3>💜 Why I chose this for us</h3><p>[Personal note here...]</p></div>
+                    <details open><summary>Day 1: Arrival</summary><div class="details-content"><ul>
+                        <li><strong>2:00 PM:</strong> Arrive, check into convent.</li>
+                        <li><strong>4:00 PM:</strong> The Pantheon.</li>
+                        <li><strong>6:30 PM:</strong> Twilight Walking Food Tour.</li>
+                    </ul></div></details>
+                    <details open><summary>Day 2: Ancient World</summary><div class="details-content"><ul>
+                        <li><strong>9:00 AM:</strong> Colosseum and Roman Forum.</li>
+                        <li><strong>8:00 PM:</strong> Dinner at La Taverna dei Fori Imperiali.</li>
+                    </ul></div></details>
                     <div class="cyoa-container">
                         <h4 class="cyoa-title">✨ Choose Your Adventure: Day 3 ✨</h4>
                         <div class="cyoa-toggle">
@@ -545,53 +378,25 @@
                             <button class="cyoa-btn ${adventureState.rome === 'B' ? 'active' : ''}" onclick="updateAdventure('rome', 'B')">E-Bikes & Catacombs</button>
                         </div>
                         <div class="cyoa-content">
-                            ${adventureState.rome === 'A' ? `
-                                <ul>
-                                    <li><strong>8:00 AM:</strong> Vatican Museums Prime Experience. We'll beat the crowds to see Michelangelo's grueling, masterful Sistine Chapel frescoes.</li>
-                                    <li><strong>1:00 PM:</strong> Lunch near the Prati neighborhood.</li>
-                                    <li><strong>3:30 PM:</strong> Head to the Borghese Gallery to get up close to Bernini's impossibly soft marble sculptures.</li>
-                                    <li><strong>9:00 PM:</strong> Walk to the Trevi Fountain after dark, grab a famous <em>Maritozzo</em> sweet bun, and stroll through Campo de' Fiori!</li>
-                                </ul>
+                            ${!adventureState.rome ? getShimmerBlock() : adventureState.rome === 'A' ? `
+                                <ul><li><strong>8:00 AM:</strong> Vatican Museums & Sistine Chapel.</li><li><strong>3:30 PM:</strong> Borghese Gallery.</li></ul>
                             ` : `
-                                <ul>
-                                    <li><strong>9:00 AM:</strong> Rent e-bikes and ride down the ancient 2,000-year-old cobblestones of the Via Appia Antica!</li>
-                                    <li><strong>11:30 AM:</strong> Park our bikes and head underground to explore the eerie Christian Catacombs.</li>
-                                    <li><strong>2:00 PM:</strong> Stop at a countryside osteria for a massive lunch featuring Rome's famous <em>Abbacchio al Forno</em> (roast lamb) and fresh artichokes.</li>
-                                    <li><strong>9:00 PM:</strong> Walk to the Trevi Fountain after dark, grab a famous <em>Maritozzo</em> sweet bun, and stroll through Campo de' Fiori!</li>
-                                </ul>
+                                <ul><li><strong>9:00 AM:</strong> E-bikes down the Via Appia Antica!</li><li><strong>11:30 AM:</strong> Explore Christian Catacombs.</li></ul>
                             `}
                         </div>
                     </div>
-
                     <button class="next-btn" onclick="openCityCard('assisi', 43.0702, 12.6186)">Next Stop: Assisi ➔</button>
                 `;
             }
-
             if (cityId === 'assisi') {
                 return `
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Assisi_panorama.jpg/800px-Assisi_panorama.jpg" alt="Basilica in Assisi" class="modal-hero-img">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Assisi_panorama.jpg/800px-Assisi_panorama.jpg" class="modal-hero-img">
                     <h2>Day 4: Assisi</h2>
-                    <div class="tag-container">
-                        <span class="tag water">🕊️ Spiritual Retreat</span>
-                        <span class="tag nature">🌲 Nature Trails</span>
-                    </div>
-
-                    <div class="why-block">
-                        <h3>💜 Why I chose this for us</h3>
-                        <p>[I will add my personal note here...]</p>
-                    </div>
-
-                    <details open>
-                        <summary>Day 4 Morning: Monastic Life</summary>
-                        <div class="details-content">
-                            <ul>
-                                <li><strong>9:00 AM:</strong> Catch our regional train out of the bustling city and into the Umbrian countryside.</li>
-                                <li><strong>11:30 AM:</strong> Check into our peaceful hilltop monastery.</li>
-                                <li><strong>1:00 PM:</strong> Explore the Basilica of San Francesco to witness Giotto's groundbreaking, three-dimensional frescoes.</li>
-                            </ul>
-                        </div>
-                    </details>
-
+                    <div class="why-block"><h3>💜 Why I chose this for us</h3><p>[Personal note here...]</p></div>
+                    <details open><summary>Day 4 Morning: Monastic Life</summary><div class="details-content"><ul>
+                        <li><strong>11:30 AM:</strong> Check into hilltop monastery.</li>
+                        <li><strong>1:00 PM:</strong> Basilica of San Francesco.</li>
+                    </ul></div></details>
                     <div class="cyoa-container">
                         <h4 class="cyoa-title">✨ Choose Your Adventure: Afternoon ✨</h4>
                         <div class="cyoa-toggle">
@@ -599,62 +404,25 @@
                             <button class="cyoa-btn ${adventureState.assisi === 'B' ? 'active' : ''}" onclick="updateAdventure('assisi', 'B')">Truffle Hunting</button>
                         </div>
                         <div class="cyoa-content">
-                            ${adventureState.assisi === 'A' ? `
-                                <ul>
-                                    <li><strong>3:30 PM:</strong> Hike up Mount Subasio to the <em>Eremo delle Carceri</em>, a remote, forested network of caves where St. Francis prayed.</li>
-                                    <li><strong>7:30 PM:</strong> Sit down for a quiet, romantic dinner at <strong>Trattoria Pallotta</strong> for wild boar ragù, black truffles, and Umbrian wine.</li>
-                                </ul>
+                            ${!adventureState.assisi ? getShimmerBlock() : adventureState.assisi === 'A' ? `
+                                <ul><li><strong>3:30 PM:</strong> Hike Mount Subasio to Eremo delle Carceri.</li><li><strong>7:30 PM:</strong> Dinner at Trattoria Pallotta.</li></ul>
                             ` : `
-                                <ul>
-                                    <li><strong>2:30 PM:</strong> Head into the Umbrian woods with a local <em>Tartufaio</em> and his specially trained dogs to hunt for fresh black truffles!</li>
-                                    <li><strong>5:30 PM:</strong> Enjoy the rewards of our hunt with a massive, rustic farmhouse meal featuring the truffles we found shaved over pasta, paired with an incredible spread of local cured pork sausages.</li>
-                                </ul>
+                                <ul><li><strong>2:30 PM:</strong> Truffle hunting in the woods with dogs!</li><li><strong>5:30 PM:</strong> Farmhouse meal with truffles and cured pork.</li></ul>
                             `}
                         </div>
                     </div>
-
                     <button class="next-btn" onclick="openCityCard('florence', 43.7695, 11.2558)">Next Stop: Florence ➔</button>
                 `;
             }
-
             if (cityId === 'florence') {
                 return `
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Florence_italy_duomo.jpg/800px-Florence_italy_duomo.jpg" alt="Florence Duomo" class="modal-hero-img">
-                    <h2>Days 5–7: Florence & Tuscany</h2>
-                    <div class="tag-container">
-                        <span class="tag history">🎨 Renaissance Art</span>
-                        <span class="tag nature">🛵 Vespa Cruising</span>
-                    </div>
-
-                    <div class="why-block">
-                        <h3>💜 Why I chose this for us</h3>
-                        <p>[I will add my personal note here...]</p>
-                    </div>
-
-                    <details open>
-                        <summary>Day 5: The Wealth of the Medici</summary>
-                        <div class="details-content">
-                            <ul>
-                                <li><strong>10:00 AM:</strong> Catch our train from Assisi into the heart of Tuscany.</li>
-                                <li><strong>1:00 PM:</strong> Check into our rustic Agriturismo farm estate!</li>
-                                <li><strong>3:00 PM:</strong> Visit the Uffizi Gallery. We'll explore the administrative headquarters of the Medici family.</li>
-                                <li><strong>6:30 PM:</strong> Walk across the historic Ponte Vecchio right at sunset.</li>
-                            </ul>
-                        </div>
-                    </details>
-                    
-                    <details open>
-                        <summary>Day 6: The Symbol of Defiance</summary>
-                        <div class="details-content">
-                            <ul>
-                                <li><strong>9:00 AM:</strong> Enter the Accademia Gallery to stand beneath Michelangelo's towering <em>David</em>.</li>
-                                <li><strong>12:30 PM:</strong> Wait in line for Florence's most legendary street food: massive schiacciata pork sandwiches from <strong>All'Antico Vinaio</strong>.</li>
-                                <li><strong>2:30 PM:</strong> Take on the 463-step climb to the top of Brunelleschi's magnificent Duomo.</li>
-                                <li><strong>7:30 PM:</strong> Sit down for an incredibly traditional Tuscan dinner featuring herb-roasted pork (<em>Arista di Maiale</em>).</li>
-                            </ul>
-                        </div>
-                    </details>
-
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Florence_italy_duomo.jpg/800px-Florence_italy_duomo.jpg" class="modal-hero-img">
+                    <h2>Days 5–7: Florence</h2>
+                    <div class="why-block"><h3>💜 Why I chose this for us</h3><p>[Personal note here...]</p></div>
+                    <details open><summary>Day 5 & 6: Art & Steak</summary><div class="details-content"><ul>
+                        <li><strong>Day 5:</strong> Uffizi Gallery & Ponte Vecchio.</li>
+                        <li><strong>Day 6:</strong> Accademia Gallery, Florence Duomo climb, and huge schiacciata sandwiches.</li>
+                    </ul></div></details>
                     <div class="cyoa-container">
                         <h4 class="cyoa-title">✨ Choose Your Adventure: Day 7 ✨</h4>
                         <div class="cyoa-toggle">
@@ -662,283 +430,181 @@
                             <button class="cyoa-btn ${adventureState.florence === 'B' ? 'active' : ''}" onclick="updateAdventure('florence', 'B')">Siena & Sweets</button>
                         </div>
                         <div class="cyoa-content">
-                            ${adventureState.florence === 'A' ? `
-                                <ul>
-                                    <li><strong>9:00 AM - 4:00 PM:</strong> Head out for our guided vintage Fiat 500 or Vespa tour through the rolling Chianti hills, including a farmhouse lunch!</li>
-                                    <li><strong>5:00 PM:</strong> Return to the city and visit the <strong>Scuola del Cuoio</strong> to watch artisans tool genuine leather jackets and bags.</li>
-                                </ul>
+                            ${!adventureState.florence ? getShimmerBlock() : adventureState.florence === 'A' ? `
+                                <ul><li><strong>9:00 AM:</strong> Vintage Fiat/Vespa tour through Chianti.</li><li><strong>5:00 PM:</strong> Scuola del Cuoio leather school.</li></ul>
                             ` : `
-                                <ul>
-                                    <li><strong>9:00 AM:</strong> Catch a luxury bus to the stunning medieval hilltop city of Siena.</li>
-                                    <li><strong>11:30 AM:</strong> Marvel at the magnificent striped Gothic Cathedral and the sweeping Piazza del Campo.</li>
-                                    <li><strong>2:00 PM:</strong> Stop at a historic bakery to indulge in <em>Panforte</em> and <em>Ricciarelli</em> (Siena's legendary, chewy almond sweet treats!).</li>
-                                    <li><strong>6:00 PM:</strong> Head back to Florence for a sunset aperitivo.</li>
-                                </ul>
+                                <ul><li><strong>9:00 AM:</strong> Bus to Siena's Gothic Cathedral.</li><li><strong>2:00 PM:</strong> Indulge in Siena's famous Panforte and Ricciarelli sweets.</li></ul>
                             `}
                         </div>
                     </div>
-
                     <button class="next-btn" onclick="openCityCard('cinque', 44.1353, 9.6828)">Next Stop: Cinque Terre ➔</button>
                 `;
             }
-
             if (cityId === 'cinque') {
                 return `
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Manarola_-_Cinque_Terre_-_Italy.jpg/800px-Manarola_-_Cinque_Terre_-_Italy.jpg" alt="Cinque Terre Coast" class="modal-hero-img">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Manarola_-_Cinque_Terre_-_Italy.jpg/800px-Manarola_-_Cinque_Terre_-_Italy.jpg" class="modal-hero-img">
                     <h2>Days 8–10: Cinque Terre</h2>
-                    <div class="tag-container">
-                        <span class="tag water">🌊 Coastal Vibes</span>
-                        <span class="tag nature">🥾 Epic Hiking</span>
-                    </div>
-
-                    <div class="why-block">
-                        <h3>💜 Why I chose this for us</h3>
-                        <p>[I will add my personal note here...]</p>
-                    </div>
-
-                    <details open>
-                        <summary>Day 8: Coastal Isolation</summary>
-                        <div class="details-content">
-                            <ul>
-                                <li><strong>10:00 AM:</strong> Take the coastal train from Florence up into the Ligurian mountains.</li>
-                                <li><strong>1:00 PM:</strong> Arrive and check into our authentic guesthouse in Levanto.</li>
-                                <li><strong>3:00 PM:</strong> Take the local train into Vernazza. We'll explore the narrow alleys and climb up to the pirate-defense Doria Castle ruins.</li>
-                                <li><strong>6:30 PM:</strong> Join the virtual queue for <strong>Nessun Dorma</strong> in Manarola. We'll watch the sun go down over the cliffs with a meat and cheese platter.</li>
-                            </ul>
-                        </div>
-                    </details>
-                    
-                    <details open>
-                        <summary>Day 9: The Monumental Landscape</summary>
-                        <div class="details-content">
-                            <ul>
-                                <li><strong>8:00 AM:</strong> Start early to hike the Sentiero Azzurro (Blue Trail) along the sea cliffs, walking past centuries of hand-carved agricultural terraces.</li>
-                                <li><strong>12:30 PM:</strong> Arrive in Monterosso. Time to cool off, shop for lemon soaps, and grab some Limoncello!</li>
-                                <li><strong>4:00 PM:</strong> Head to Riomaggiore for an afternoon snack: a paper cone filled with hot, fresh-fried calamari and shrimp from <strong>Il Pescato Cucinato</strong>.</li>
-                            </ul>
-                        </div>
-                    </details>
-
+                    <div class="why-block"><h3>💜 Why I chose this for us</h3><p>[Personal note here...]</p></div>
+                    <details open><summary>Day 8 & 9: Cliffs & Pesto</summary><div class="details-content"><ul>
+                        <li><strong>Day 8:</strong> Arrive in Levanto, sunset at Nessun Dorma.</li>
+                        <li><strong>Day 9:</strong> Hike Sentiero Azzurro, eat fresh calamari in Riomaggiore.</li>
+                    </ul></div></details>
                     <div class="cyoa-container">
                         <h4 class="cyoa-title">✨ Choose Your Adventure: Day 10 ✨</h4>
                         <div class="cyoa-toggle">
-                            <button class="cyoa-btn ${adventureState.cinque === 'A' ? 'active' : ''}" onclick="updateAdventure('cinque', 'A')">Pasta Class & Kayak</button>
-                            <button class="cyoa-btn ${adventureState.cinque === 'B' ? 'active' : ''}" onclick="updateAdventure('cinque', 'B')">Private Boat Tour</button>
+                            <button class="cyoa-btn ${adventureState.cinque === 'A' ? 'active' : ''}" onclick="updateAdventure('cinque', 'A')">Pesto & Vineyards</button>
+                            <button class="cyoa-btn ${adventureState.cinque === 'B' ? 'active' : ''}" onclick="updateAdventure('cinque', 'B')">Sanctuary Hike</button>
                         </div>
                         <div class="cyoa-content">
-                            ${adventureState.cinque === 'A' ? `
+                            ${!adventureState.cinque ? getShimmerBlock() : adventureState.cinque === 'A' ? `
                                 <ul>
-                                    <li><strong>10:00 AM:</strong> Fresh Pasta and Focaccia class! We'll learn to hand-roll Ligurian <em>trofie</em> pasta.</li>
-                                    <li><strong>2:30 PM:</strong> Rent a kayak in the afternoon to view the colorful, steep cliffside villages from the water—just like returning sailors used to do!</li>
+                                    <li><strong>10:00 AM:</strong> Authentic Pesto Making Masterclass in the hills of Manarola.</li>
+                                    <li><strong>2:00 PM:</strong> Walk through the steeply terraced vineyards for a dry-land wine tasting overlooking the sea.</li>
                                 </ul>
                             ` : `
                                 <ul>
-                                    <li><strong>10:00 AM:</strong> Skip the crowds and board a private traditional wooden <em>gozzo</em> boat!</li>
-                                    <li><strong>1:00 PM:</strong> Sail down the rugged coast to the hidden gem of Portovenere, seeing the majestic cliffs from the sea.</li>
-                                    <li><strong>3:00 PM:</strong> Eat fresh, locally caught seafood right on the boat while swimming in hidden, crystal-clear coves.</li>
+                                    <li><strong>9:00 AM:</strong> Take the scenic inland hike up to the Sanctuary of Montenero (solid ground, amazing views!).</li>
+                                    <li><strong>1:00 PM:</strong> Reward ourselves with massive slices of warm, oil-soaked focaccia bread in the village square.</li>
                                 </ul>
                             `}
                         </div>
                     </div>
-
                     <button class="next-btn" onclick="openCityCard('venice', 45.4408, 12.3155)">Next Stop: Venice ➔</button>
                 `;
             }
-
             if (cityId === 'venice') {
                 return `
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Grand_Canal_Venice.jpg/800px-Grand_Canal_Venice.jpg" alt="Venice Grand Canal" class="modal-hero-img">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Grand_Canal_Venice.jpg/800px-Grand_Canal_Venice.jpg" class="modal-hero-img">
                     <h2>Days 11–14: Venice</h2>
-                    <div class="tag-container">
-                        <span class="tag water">🛶 Romantic Canals</span>
-                        <span class="tag history">🎭 Secret History</span>
-                    </div>
-
-                    <div class="why-block">
-                        <h3>💜 Why I chose this for us</h3>
-                        <p>[I will add my personal note here...]</p>
-                    </div>
-
-                    <details open>
-                        <summary>Day 11: Across the North</summary>
-                        <div class="details-content">
-                            <ul>
-                                <li><strong>11:00 AM:</strong> Hop on the high-speed train leaving the coast for the Venetian Lagoon.</li>
-                                <li><strong>3:30 PM:</strong> Step out of the station and immediately catch the Vaporetto (water bus) cruising down the majestic Grand Canal.</li>
-                                <li><strong>4:30 PM:</strong> Check into our historic palazzo guest house.</li>
-                                <li><strong>7:00 PM:</strong> Head out to Campo Santa Margherita to grab cheap spritzes and mingle with the university students and locals!</li>
-                            </ul>
-                        </div>
-                    </details>
-                    
-                    <details open>
-                        <summary>Day 12: Secrets of the Republic & Casanova</summary>
-                        <div class="details-content">
-                            <ul>
-                                <li><strong>9:30 AM:</strong> Doge’s Palace "Secret Itineraries" tour. We'll explore the hidden offices of the maritime empire and step inside Casanova's legendary prison cell.</li>
-                                <li><strong>1:00 PM:</strong> Grab a casual lunch away from St. Mark's Square.</li>
-                                <li><strong>6:00 PM:</strong> Time for our Cicchetti crawl! We'll start at <strong>Cantina Do Mori</strong> for fresh seafood crostini, followed by sweet pastry <em>Fritole</em> treats!</li>
-                            </ul>
-                        </div>
-                    </details>
-
+                    <div class="why-block"><h3>💜 Why I chose this for us</h3><p>[Personal note here...]</p></div>
+                    <details open><summary>Day 11 & 12: Casanova & Canals</summary><div class="details-content"><ul>
+                        <li><strong>Day 11:</strong> Vaporetto ride, evening in Campo Santa Margherita.</li>
+                        <li><strong>Day 12:</strong> Doge's Palace Secret Itineraries, evening Cicchetti crawl.</li>
+                    </ul></div></details>
                     <div class="cyoa-container">
                         <h4 class="cyoa-title">✨ Choose Your Adventure: Day 13 ✨</h4>
                         <div class="cyoa-toggle">
-                            <button class="cyoa-btn ${adventureState.venice === 'A' ? 'active' : ''}" onclick="updateAdventure('venice', 'A')">Glass & Mask Artisans</button>
-                            <button class="cyoa-btn ${adventureState.venice === 'B' ? 'active' : ''}" onclick="updateAdventure('venice', 'B')">Learn to Row</button>
+                            <button class="cyoa-btn ${adventureState.venice === 'A' ? 'active' : ''}" onclick="updateAdventure('venice', 'A')">Glass & Masks</button>
+                            <button class="cyoa-btn ${adventureState.venice === 'B' ? 'active' : ''}" onclick="updateAdventure('venice', 'B')">Hidden Cannaregio</button>
                         </div>
                         <div class="cyoa-content">
-                            ${adventureState.venice === 'A' ? `
-                                <ul>
-                                    <li><strong>10:00 AM:</strong> Take the Vaporetto to Murano. We'll watch the master glassblowers whose secrets the Republic guarded with their lives!</li>
-                                    <li><strong>2:00 PM:</strong> Head to Dorsoduro to visit <strong>Ca' Macana</strong> and see how authentic papier-mâché Venetian masks are crafted.</li>
-                                    <li><strong>5:30 PM:</strong> Our final night! A romantic sunset gondola ride through the shallow, winding canals.</li>
-                                </ul>
+                            ${!adventureState.venice ? getShimmerBlock() : adventureState.venice === 'A' ? `
+                                <ul><li><strong>10:00 AM:</strong> Murano Glass blowing.</li><li><strong>2:00 PM:</strong> Ca' Macana Mask making.</li></ul>
                             ` : `
                                 <ul>
-                                    <li><strong>10:00 AM:</strong> Skip the tourist lines and meet with a local Venetian maritime expert.</li>
-                                    <li><strong>11:30 AM:</strong> Step into a traditional wooden <em>Barchin</em> and actually learn to row like a gondolier (<em>Voga alla Veneta</em>) through the quiet canals!</li>
-                                    <li><strong>5:00 PM:</strong> Reward our hard physical work with a deep dive into Cannaregio's best bakeries for an absolute feast of sweet treats.</li>
+                                    <li><strong>10:00 AM:</strong> Deep dive walking tour into the historic Jewish Ghetto and Cannaregio district (firmly on land!).</li>
+                                    <li><strong>3:00 PM:</strong> Spend the afternoon hopping between traditional bakeries hunting for Venetian sweet fritters.</li>
                                 </ul>
                             `}
                         </div>
                     </div>
-
-                    <details open>
-                        <summary>Day 14: Departure</summary>
-                        <div class="details-content">
-                            <ul>
-                                <li><strong>9:00 AM:</strong> Grab a final Italian espresso, then take the Alilaguna water bus to Marco Polo Airport for our journey home!</li>
-                            </ul>
-                        </div>
-                    </details>
                 `;
             }
         }
 
-        // Helper function for Tag UI mapping
-        function getTagInfo(type) {
-            switch(type) {
-                case 'food': return { class: 'food', text: 'Local Eats' };
-                case 'shop': return { class: 'water', text: 'Shopping' };
-                case 'stay': return { class: 'stay', text: 'Accommodation' };
-                case 'sight': return { class: 'history', text: 'History & Art' };
-                case 'nature': return { class: 'nature', text: 'Outdoors' };
-                default: return { class: 'history', text: 'Explore' };
-            }
-        }
-
-        // Render Main City Markers
         locations.forEach(loc => {
-            const numberedIcon = L.divIcon({ 
-                className: 'custom-pin', 
-                html: `<span>${loc.step}</span>`,
-                iconSize: [36, 36], 
-                iconAnchor: [18, 18] 
-            });
-            
-            const marker = L.marker(loc.coords, { 
-                icon: numberedIcon,
+            const m = L.marker(loc.coords, { 
+                icon: L.divIcon({ className: 'custom-pin', html: `<span>${loc.step}</span>`, iconSize: [36, 36], iconAnchor: [18, 18] }),
                 zIndexOffset: 1000 
             }).addTo(map);
-            
-            marker.bindTooltip(loc.name, { permanent: false, direction: 'top' });
-            
-            marker.on('click', () => {
+            m.bindTooltip(loc.name, { direction: 'top' });
+            m.on('click', () => {
                 document.getElementById('itineraryDetails').innerHTML = getItineraryHtml(loc.id);
                 document.getElementById('modalOverlay').classList.add('active');
             });
         });
 
-        // Render Detailed Extra Markers
-        extraLocations.forEach(loc => {
-            const iconClass = `${loc.type}-pin`;
-            const extraIcon = L.divIcon({
-                className: `custom-pin ${iconClass}`,
-                html: `<span>${loc.emoji}</span>`,
-                iconSize: [28, 28], 
-                iconAnchor: [14, 14]
-            });
-            
-            const marker = L.marker(loc.coords, { icon: extraIcon }).addTo(map);
-            marker.bindTooltip(loc.name, { permanent: false, direction: 'top' });
-            
-            const tagInfo = getTagInfo(loc.type);
-            const popupHtml = `
-                <h2>${loc.name}</h2>
-                <div class="tag-container">
-                    <span class="tag ${tagInfo.class}">${loc.emoji} ${tagInfo.text}</span>
-                </div>
-                <div class="details-content" style="padding: 0;">
-                    <p>${loc.desc}</p>
-                </div>
-            `;
-
-            marker.on('click', () => {
-                document.getElementById('itineraryDetails').innerHTML = popupHtml;
-                document.getElementById('modalOverlay').classList.add('active');
-            });
-        });
-
-        // --- CYOA Update Logic ---
         window.updateAdventure = function(cityId, choice) {
-            // Update the state
             adventureState[cityId] = choice;
-            
-            // Re-render the modal card
-            const detailsContainer = document.getElementById('itineraryDetails');
-            if (detailsContainer) {
-                detailsContainer.innerHTML = getItineraryHtml(cityId);
-            }
-            
-            // Force re-render the sidebar so it reflects the new choice
-            const sidebarContent = document.getElementById('sidebarContent');
-            if (sidebarContent.innerHTML.trim() !== '') {
-                populateSidebar(true);
-            }
+            document.getElementById('itineraryDetails').innerHTML = getItineraryHtml(cityId);
+            // We do not auto-refresh the text-sidebar here, it generates fresh when opened.
         };
 
-        // --- Sidebar Functionality ---
         function toggleSidebar() {
             const sidebar = document.getElementById('itinerarySidebar');
             if (sidebar.classList.contains('active')) {
                 sidebar.classList.remove('active');
             } else {
                 closeModal(); 
-                populateSidebar(false);
+                populateSidebar();
                 sidebar.classList.add('active');
             }
         }
 
-        function populateSidebar(forceRefresh) {
-            const sidebarContent = document.getElementById('sidebarContent');
-            if (!forceRefresh && sidebarContent.children.length > 0) return; 
+        // Generates PURE SEMANTIC HTML text for easy copying to Google Docs!
+        function populateSidebar() {
+            const content = `
+                <div style="font-family: Arial, sans-serif; color: #000; line-height: 1.6; max-width: 100%;">
+                    <h1 style="font-size: 24px; border-bottom: 2px solid #ccc; padding-bottom: 10px;">Our Italian Adventure: 14-Day Itinerary</h1>
+                    
+                    <h2 style="font-size: 20px; margin-top: 25px; color: #C84C35;">Days 1-3: Rome</h2>
+                    <p><strong>Lodging:</strong> Casa di Santa Brigida or Casa Maria Immacolata</p>
+                    <ul>
+                        <li><strong>Day 1:</strong> Arrive 2:00 PM. Visit the Pantheon (4:00 PM). Twilight walking food tour in Trastevere (6:30 PM).</li>
+                        <li><strong>Day 2:</strong> Colosseum and Roman Forum (9:00 AM). Lunch and vintage shopping in Monti (1:00 PM). Dinner at La Taverna dei Fori Imperiali (8:00 PM).</li>
+                    </ul>
+                    <h3 style="font-size: 16px; margin-top: 15px;">Day 3 Alternate Options:</h3>
+                    <ul>
+                        <li><strong>Option A (Vatican & Art):</strong> Vatican Museums (8:00 AM), Borghese Gallery (3:30 PM), Trevi Fountain at night.</li>
+                        <li><strong>Option B (E-Bikes & Catacombs):</strong> E-bike down Via Appia Antica (9:00 AM), explore Catacombs (11:30 AM), roast lamb lunch at a countryside Osteria.</li>
+                    </ul>
 
-            let fullHtml = '';
-            locations.forEach(loc => {
-                let htmlBlock = getItineraryHtml(loc.id);
-                
-                // Strip out buttons and images for a clean text timeline view
-                htmlBlock = htmlBlock.replace(/<button[^>]*next-btn[^>]*>[\s\S]*?<\/button>/g, '');
-                htmlBlock = htmlBlock.replace(/<img[^>]*modal-hero-img[^>]*>/g, '');
-                
-                // Keep details open in sidebar for easy scrolling
-                htmlBlock = htmlBlock.replace(/<details>/g, '<details open>');
+                    <h2 style="font-size: 20px; margin-top: 25px; color: #C84C35;">Day 4: Assisi</h2>
+                    <p><strong>Lodging:</strong> Monastero Sant'Andrea</p>
+                    <ul>
+                        <li><strong>Morning:</strong> Regional train to Assisi. Visit the Basilica of San Francesco (1:00 PM).</li>
+                    </ul>
+                    <h3 style="font-size: 16px; margin-top: 15px;">Afternoon Alternate Options:</h3>
+                    <ul>
+                        <li><strong>Option A (Spiritual Hike):</strong> Hike Mount Subasio to Eremo delle Carceri (3:30 PM). Dinner at Trattoria Pallotta (7:30 PM).</li>
+                        <li><strong>Option B (Truffle Hunting):</strong> Forest truffle hunt with dogs (2:30 PM). Farmhouse meal with truffles and cured pork (5:30 PM).</li>
+                    </ul>
 
-                fullHtml += `<div class="sidebar-section">${htmlBlock}</div>`;
-            });
-            sidebarContent.innerHTML = fullHtml;
+                    <h2 style="font-size: 20px; margin-top: 25px; color: #C84C35;">Days 5-7: Florence & Tuscany</h2>
+                    <p><strong>Lodging:</strong> Fattoria Il Milione (Agriturismo)</p>
+                    <ul>
+                        <li><strong>Day 5:</strong> Uffizi Gallery (3:00 PM). Sunset at Ponte Vecchio (6:30 PM).</li>
+                        <li><strong>Day 6:</strong> Accademia Gallery / David (9:00 AM). All'Antico Vinaio sandwiches (12:30 PM). Florence Duomo climb (2:30 PM).</li>
+                    </ul>
+                    <h3 style="font-size: 16px; margin-top: 15px;">Day 7 Alternate Options:</h3>
+                    <ul>
+                        <li><strong>Option A (Chianti Vespa):</strong> Guided vintage Vespa/Fiat tour in Chianti (9:00 AM). Scuola del Cuoio leather artisans (5:00 PM).</li>
+                        <li><strong>Option B (Siena Sweets):</strong> Bus to Siena's Cathedral (9:00 AM). Indulge in historic Siena Panforte and Ricciarelli almond sweets (2:00 PM).</li>
+                    </ul>
+
+                    <h2 style="font-size: 20px; margin-top: 25px; color: #C84C35;">Days 8-10: Cinque Terre</h2>
+                    <p><strong>Lodging:</strong> Affittacamere Anna (Levanto)</p>
+                    <ul>
+                        <li><strong>Day 8:</strong> Arrive in Levanto. Visit Vernazza (3:00 PM). Sunset platter at Nessun Dorma in Manarola (6:30 PM).</li>
+                        <li><strong>Day 9:</strong> Hike the Sentiero Azzurro (8:00 AM). Fried calamari in Riomaggiore (4:00 PM).</li>
+                    </ul>
+                    <h3 style="font-size: 16px; margin-top: 15px;">Day 10 Alternate Options:</h3>
+                    <ul>
+                        <li><strong>Option A (Pesto & Vineyards):</strong> Authentic Pesto Making Masterclass (10:00 AM). Terraced cliffside wine tasting (2:00 PM).</li>
+                        <li><strong>Option B (Sanctuary Hike):</strong> Inland scenic hike to the Sanctuary of Montenero (9:00 AM). Warm focaccia in the village (1:00 PM).</li>
+                    </ul>
+
+                    <h2 style="font-size: 20px; margin-top: 25px; color: #C84C35;">Days 11-14: Venice</h2>
+                    <p><strong>Lodging:</strong> Foresteria Valdese</p>
+                    <ul>
+                        <li><strong>Day 11:</strong> Vaporetto on the Grand Canal (3:30 PM). Evening in Campo Santa Margherita (7:00 PM).</li>
+                        <li><strong>Day 12:</strong> Doge's Palace Secret Itineraries (9:30 AM). Evening Cicchetti crawl at Cantina Do Mori (6:00 PM).</li>
+                    </ul>
+                    <h3 style="font-size: 16px; margin-top: 15px;">Day 13 Alternate Options:</h3>
+                    <ul>
+                        <li><strong>Option A (Artisans):</strong> Murano Glassblowing (10:00 AM). Ca' Macana mask making (2:00 PM). Sunset gondola ride (5:30 PM).</li>
+                        <li><strong>Option B (Hidden Venice):</strong> Dry-land walking tour of Cannaregio & Jewish Ghetto (10:00 AM). Sweet fritter bakery hopping (3:00 PM).</li>
+                    </ul>
+                    <ul>
+                        <li><strong>Day 14:</strong> Alilaguna water bus to Marco Polo Airport for departure (9:00 AM).</li>
+                    </ul>
+                </div>
+            `;
+            document.getElementById('sidebarContent').innerHTML = content;
         }
 
-        // --- Modal Functionality ---
-        function closeModal() { 
-            document.getElementById('modalOverlay').classList.remove('active'); 
-        }
-        
-        document.getElementById('modalOverlay').addEventListener('click', function(e) { 
-            if(e.target === this) closeModal(); 
-        });
+        function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+        document.getElementById('modalOverlay').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
 
         function startAdventure() {
             document.getElementById('welcomeOverlay').classList.remove('active');
@@ -947,11 +613,7 @@
 
         function openCityCard(cityId, lat, lng) {
             closeModal();
-            map.flyTo([lat, lng], 13, {
-                duration: 1.5,
-                easeLinearity: 0.25
-            });
-            
+            map.flyTo([lat, lng], 13, { duration: 1.5, easeLinearity: 0.25 });
             setTimeout(() => {
                 document.getElementById('itineraryDetails').innerHTML = getItineraryHtml(cityId);
                 document.getElementById('modalOverlay').classList.add('active');
