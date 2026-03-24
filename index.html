@@ -22,6 +22,7 @@
             --text-light: #666666;
             --card-bg: #FFFFFF;
             --border-light: #EBE6DE;
+            --route-color: #4A6B53; 
         }
 
         body {
@@ -364,9 +365,10 @@
     <div class="modal-overlay active" id="welcomeOverlay">
         <div class="modal-content">
             <h2 style="border: none; margin-bottom: 10px;">Happy 25th Birthday, Damian!! 💜</h2>
-            <p style="font-size: 1.1rem; color: var(--text-light); line-height: 1.6; margin-bottom: 30px;">
+            <p style="font-size: 1.1rem; color: var(--text-light); line-height: 1.6; margin-bottom: 25px;">
                 I know how much you want to travel and see the world, and I want to make this possible for you & be right there beside you every step of the way. Because you deserve all the very best the world has to offer you, my love. So, my birthday present to you this year is an itinerary that I crafted with you in mind! We can modify it, pick dates, and I'll go ahead and finalize the reservations :D (P.S. I also want to commit ~$400 towards your expenses as a part of this hehe) 
             </p>
+            <img src="IMG_6156.heic" alt="Happy Birthday" class="modal-hero-img">
             <button class="next-btn" onclick="startAdventure()">Start Our Adventure ➔</button>
         </div>
     </div>
@@ -454,6 +456,7 @@
         function getItineraryHtml(cityId) {
             if (cityId === 'rome') {
                 return `
+                    <img src="IMG_7307.JPG" alt="Us" class="modal-hero-img">
                     <h2>Days 1–3: Rome</h2>
                     <div class="tag-container">
                         <span class="tag history">🏛️ Ancient Wonders</span>
@@ -462,7 +465,7 @@
                     
                     <div class="why-block">
                         <h3>💜 Why I chose this for us</h3>
-                        <p>The Roman Empire!! I know how much you love history, and I think this would be such an iconic start to see all the views! I can't wait for you to tell me everything you know about these places, and most importantly see your eyes light up as we go through the city :) </p>
+                        <p>The Roman Empire!! I know how much you love history, and I think this would be such an iconic start to see all the views! I can't wait for you to tell me everything you know about these places, and most importantly see your eyes light up as we go through the city :)</p>
                     </div>
 
                     <details open>
@@ -488,6 +491,8 @@
                             </ul>
                         </div>
                     </details>
+
+                    <img src="IMG_8280.heic" alt="Eating Italian pasta" class="modal-hero-img">
 
                     <div class="cyoa-container">
                         <h4 class="cyoa-title">✨ Choose Your Adventure: Day 3 ✨</h4>
@@ -520,6 +525,7 @@
 
             if (cityId === 'assisi') {
                 return `
+                    <img src="IMG_1963.jpg" alt="Pumpkin farm" class="modal-hero-img">
                     <h2>Day 4: Assisi</h2>
                     <div class="tag-container">
                         <span class="tag water">🕊️ Spiritual Retreat</span>
@@ -528,7 +534,7 @@
 
                     <div class="why-block">
                         <h3>💜 Why I chose this for us</h3>
-                        <p>Actually this was Sohum's recommendation! As I looked into it further, the art just seemed so cool that we had to make a pit stop. Also I feel like staying in a monastery is kinda dope lol </p>
+                        <p>Actually this was Sohum's recommendation! As I looked into it further, the art just seemed so cool that we had to make a pit stop. Also I feel like staying in a monastery is kinda dope lol</p>
                     </div>
 
                     <details open>
@@ -569,6 +575,7 @@
 
             if (cityId === 'florence') {
                 return `
+                    <img src="IMG_6543.heic" alt="Us matching in white" class="modal-hero-img">
                     <h2>Days 5–7: Florence & Tuscany</h2>
                     <div class="tag-container">
                         <span class="tag history">🎨 Renaissance Art</span>
@@ -577,7 +584,7 @@
 
                     <div class="why-block">
                         <h3>💜 Why I chose this for us</h3>
-                        <p>This one I chose for the romantic aspect with a few cultural activities built in 💕 From what I've heard, this is one of the few must dos if you're going to Italy. Plus the food (and sweet treats!!) seemed so so yummy! </p>
+                        <p>This one I chose for the romantic aspect with a few cultural activities built in 💕 From what I've heard, this is one of the few must dos if you're going to Italy. Plus the food (and sweet treats!!) seemed so so yummy!</p>
                     </div>
 
                     <details open>
@@ -633,6 +640,7 @@
 
             if (cityId === 'cinque') {
                 return `
+                    <img src="IMG_8442.heic" alt="Kiss on a cliff" class="modal-hero-img">
                     <h2>Days 8–10: Cinque Terre</h2>
                     <div class="tag-container">
                         <span class="tag water">🌊 Coastal Vibes</span>
@@ -694,6 +702,7 @@
 
             if (cityId === 'venice') {
                 return `
+                    <img src="IMG_8032.HEIC" alt="Drinks!" class="modal-hero-img">
                     <h2>Days 11–14: Venice</h2>
                     <div class="tag-container">
                         <span class="tag water">🛶 Romantic Canals</span>
@@ -702,7 +711,7 @@
 
                     <div class="why-block">
                         <h3>💜 Why I chose this for us</h3>
-                        <p>Ok honestly, as iconic as Venice is, I mostly picked this because I thought you'd like the prison cells we'd be visiting! And I absolutely cannot miss the best bakeries in the country, and there's no one I'd rather grab a sweet treat with than my sweet heart. I know this adventure only marks the start of many, and I can't wait to do it all with you. </p>
+                        <p>Ok honestly, as iconic as Venice is, I mostly picked this because I thought you'd like the prison cells we'd be visiting! And I absolutely cannot miss the best bakeries in the country, and there's no one I'd rather grab a sweet treat with than my sweet heart. I know this adventure only marks the start of many, and I can't wait to do it all with you.</p>
                     </div>
 
                     <details open>
@@ -750,6 +759,8 @@
                             `}
                         </div>
                     </div>
+
+                    <img src="IMG_6608.heic" alt="Laughing at a party" class="modal-hero-img">
 
                     <details open>
                         <summary>Day 14: Departure</summary>
